@@ -67,6 +67,21 @@ def getproxies(urls):
         record(string)
 
 
+# ------------------------------------------------代理抓取1---------------------------------------------------------------
+# 89代理抓取
+def getproxies2(urls):
+    req = requests.get(urls, headers=getheaders()).text
+    soup = BeautifulSoup(req, 'lxml')
+    tr = soup.find_all('tr')[1:]
+    for t in tr:
+        # - 判断列表是否为空
+        if not t:
+            continue
+        td = re.findall(r'<td>\s+(..*?)\s+</td>', str(t))
+        ips = '{}:{}\n'.format(td[0], td[1])
+        record(ips)
+
+
 # -----------------------------------------------清空文档-----------------------------------------------------------------
 def clear_file():
     with open(path, 'w', encoding='utf-8') as f:
@@ -81,10 +96,11 @@ def record(text):
 
 def main():
     clear_file()
-    for i in range(2):
-        url = 'https://ip.jiangxianli.com/?page={}&country=%E4%B8%AD%E5%9B%BD'.format(i + 1)
+    for i in range(5):
+        # url = 'https://ip.jiangxianli.com/?page={}&country=%E4%B8%AD%E5%9B%BD'.format(i + 1)
+        url = 'https://www.89ip.cn/index_{}.html'.format(i + 1)  # 89代理
         try:
-            getproxies(url)
+            getproxies2(url)
         except RequestException:
             print("ip抓取不足")
 

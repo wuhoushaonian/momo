@@ -3,6 +3,7 @@ import re
 import random
 import requests
 from bs4 import BeautifulSoup
+import time
 
 path = 'ip.txt'  # 文件保存地址
 
@@ -35,25 +36,10 @@ def getheaders():
     return headers_list
 
 
-# ------------------------------------------------代理抓取1---------------------------------------------------------------
-# 89代理抓取
-def getproxies2(urls):
-    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
-    soup = BeautifulSoup(req, 'lxml')
-    tr = soup.find_all('tr')[1:]
-    for t in tr:
-        # - 判断列表是否为空
-        if not t:
-            continue
-        td = re.findall(r'<td>\s+(..*?)\s+</td>', str(t))
-        ips = '{}:{}\n'.format(td[0], td[1])
-        record(ips)
-
-
-# -----------------------------------------------代理抓取2--------------------------------------------------------------
+# -----------------------------------------------代理抓取1--------------------------------------------------------------
 def getproxies1(urls):
     """1"""
-    rep = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    rep = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}, timeout=10).text
     soup = BeautifulSoup(rep, 'lxml')
     tbodies = soup.find_all('tr')
     for tbody in tbodies:
@@ -63,6 +49,21 @@ def getproxies1(urls):
             continue
         # - 写入文件
         ips = '{}:{}\n'.format(res[0], res[1])
+        record(ips)
+
+
+# ------------------------------------------------代理抓取2---------------------------------------------------------------
+# 89代理抓取
+def getproxies2(urls):
+    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}, timeout=10).text
+    soup = BeautifulSoup(req, 'lxml')
+    tr = soup.find_all('tr')[1:]
+    for t in tr:
+        # - 判断列表是否为空
+        if not t:
+            continue
+        td = re.findall(r'<td>\s+(..*?)\s+</td>', str(t))
+        ips = '{}:{}\n'.format(td[0], td[1])
         record(ips)
 
 
@@ -79,6 +80,43 @@ def getproxies3(urls):
         record('{}\n'.format(res[0]))
 
 
+# -----------------------------------------------代理抓取4--------------------------------------------------------------
+# 小幻
+def getproxies4(urls):
+    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    soup = BeautifulSoup(req, 'lxml')
+
+    tr = soup.find_all('tr')[1:]
+    for i in tr:
+        ip_address = re.findall(r'<td><a\s.*?><img\s.*?>(.*?)</a>', str(i))[0]
+        post = re.findall(r'<td>(.*?)</td>', str(i))[1]
+        record('{}:{}\n'.format(ip_address, post))
+
+
+# -----------------------------------------------代理抓取4--------------------------------------------------------------
+# 快代理
+def getproxies5(urls):
+    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    soup = BeautifulSoup(req, 'lxml')
+    tr = soup.find_all('tr')[1:]
+    for i in tr:
+        ip_address = re.findall(r'<td\sdata-title="IP">(.*?)</td>', str(i))[0]
+        post = re.findall(r'<td\sdata-title="PORT">(.*?)</td>', str(i))[0]
+        record('{}:{}\n'.format(ip_address, post))
+
+
+# -----------------------------------------------代理抓取6--------------------------------------------------------------
+# 泥马代理
+def getproxies6(urls):
+    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    soup = BeautifulSoup(req, 'lxml')
+    tr = soup.find_all('tr')[1:]
+
+    for i in tr:
+        ip_post = re.findall(r'<td>(.*?)</td>', str(i))[0]
+        record('{}\n'.format(ip_post))
+
+
 # -----------------------------------------------清空文档-----------------------------------------------------------------
 def clear_file():
     with open(path, 'w', encoding='utf-8') as f:
@@ -93,16 +131,52 @@ def record(text):
 
 # -----------------------------------------------网址生成-----------------------------------------------------------------
 def geturl():
+    print("正在抓取代理IP。。。")
+    # list_url = ['b97827cc', '4ce63706', '5crfe930', 'f3k1d581', 'ce1d45977', '881aaf7b5', 'f3k1d581']
+    # for i in range(5):
+    #     url = 'https://ip.ihuan.me/address/5Lit5Zu9.html?page={}'.format(list_url[i])
+    #     try:
+    #         getproxies4(url)
+    #     except Exception:
+    #         time.sleep(2)
+    #         getproxies4(url)
+    #     finally:
+    #         time.sleep(3)
     for i in range(5):
-        if i <= 2:
-            # 高可用代理中国区
-            getproxies1('https://ip.jiangxianli.com/?page={}&country=%E4%B8%AD%E5%9B%BD'.format(i + 1))
-        getproxies2('https://www.89ip.cn/index_{}.html'.format(i + 1))  # 89代理
-        getproxies3('http://www.xiladaili.com/http/{}/'.format(i + 1))
-    print('代理ip抓取完成！')
+        if i <= 3:
+            try:
+                # 高可用代理中国区
+                getproxies1('https://ip.jiangxianli.com/?page={}&country=%E4%B8%AD%E5%9B%BD'.format(i + 1))
+            finally:
+                time.sleep(2)
+
+        # 废弃
+        # try:
+        #     getproxies2('https://www.89ip.cn/index_{}.html'.format(i + 1))  # 89代理
+        # except Exception:
+        #     pass
+        # 废弃
+        # try:
+        #     getproxies5('https://www.kuaidaili.com/free/inha/{}/'.format(i + 1))  # 快代理
+        #     time.sleep(2)
+        # except Exception:
+        #     pass
+        try:
+            getproxies6('http://www.nimadaili.com/gaoni/{}/'.format(i + 1))
+        finally:
+            time.sleep(2)
+
+    # 废弃
+    # getproxies3('http://www.xiladaili.com/http/{}/'.format(i + 1))
+    # except Exception:
+    #     pass
+    print('代理ip抓取完成！！！')
 
 
 # -----------------------------------------------运行主函数---------------------------------------------------------------
 def main():
     clear_file()
     geturl()
+
+# if __name__ == '__main__':
+#     main()
