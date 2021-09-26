@@ -22,7 +22,7 @@ def share_Link():
     import sys
     import os
     # 判断文件是否存在，不存在则创建
-    file = 'E:\\Desktop\\momo_link.txt'  # 在桌面位置
+    file = 'E:\\Desktop\\momo_link.txt'  # 在桌面位置 (可依据所用电脑环境更改地址
     if os.path.isfile(file):
         fileopen = open(file, 'r', encoding='utf-8')
         momo_share_link = fileopen.readline()  # 读取文件中momo分享链接
@@ -76,6 +76,8 @@ def main():
 if __name__ == '__main__':
     ip.ip_main()
     main()
-    path = 'E:\\Desktop\\访问成功{}次.txt'.format(n)  # 在桌面创建文件 提示访问成功次数
+    # 在桌面创建文件 提示访问成功次数
+    # 可依据所用电脑环境 更换地址
+    path = 'E:\\Desktop\\访问成功{}次.txt'.format(n)
     with open(path, 'w', encoding='utf-8') as f:
         f.close()

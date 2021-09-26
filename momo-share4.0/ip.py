@@ -49,6 +49,10 @@ async def record(text):
 
 # 实例化请求对象
 async def GetRequest(urls, mod=0):
+    """
+    @param urls: url地址
+    @param mod: 用于区分不同网页内容的情况,对网页内容进行清洗,以提取代理IP
+    """
     header = await getheaders()  # 设置请求头
     async with aiohttp.ClientSession() as session:  # 实例化一个请求对象
         await asyncio.sleep(1)
@@ -63,6 +67,7 @@ async def GetRequest(urls, mod=0):
 
 # 清洗页面 提取IP
 async def soup_page(source, mod):
+    # 可依据判断mod 添加对应网站内容的清理方法
     if mod == 0:
         # 通用
         soup = BeautifulSoup(source, 'lxml')
@@ -96,6 +101,8 @@ async def soup_page(source, mod):
 def ip_main():
     clear_file()
     print('正在抓取代理ip。。。')
+
+    # 添加异步任务
     task = [GetRequest('http://www.kxdaili.com/dailiip.html'),
             GetRequest('http://www.kxdaili.com/dailiip/2/1.html'),
             GetRequest('https://ip.jiangxianli.com/?page=1&country=%E4%B8%AD%E5%9B%BD'),
