@@ -79,5 +79,5 @@ if __name__ == '__main__':
     # 在桌面创建文件 提示访问成功次数
     # 可依据所用电脑环境 更换地址
     path = 'E:\\Desktop\\访问成功{}次.txt'.format(n)
-    with open(path, 'w', encoding='utf-8') as f:
-        f.close()
+    f = open(path, 'w', encoding='utf-8')
+    f.close()
