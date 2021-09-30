@@ -64,7 +64,7 @@ async def web_request(url, header, proxy, sem, session):
 # 判断访问是否成功
 async def page(page_source):
     global n
-    if "iicovo" in page_source:
+    if "墨墨" in page_source:
         n += 1
         print('访问成功!!!')
 
