@@ -70,16 +70,17 @@ async def page(page_source):
 
 
 def main():
-    link = share_Link()
+    link = share_Link()  # 读取文件里的墨墨分享链接
     print("访问链接:", link)
+    ip.ip_main()  # 抓取代理
     proxies = [i.strip() for i in readfile()]  # 生成代理链接格式: http://ip:port
-    asyncio.run(create_aiohttp(link, proxies))
-
-
-if __name__ == '__main__':
-    ip.ip_main()
-    main()
+    asyncio.run(create_aiohttp(link, proxies))  # 异步访问
     print("任务完成!!!")
+    # 桌面创建文件 呈现程序运行结果
     path = 'E:\\Desktop\\访问成功{}次.txt'.format(n)
     with open(path, 'w', encoding='utf-8') as f:
         f.close()
+
+
+if __name__ == '__main__':
+    main()
