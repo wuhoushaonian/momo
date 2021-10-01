@@ -1,7 +1,7 @@
 # encoding:utf-8
 import re
 import random
-import requests
+from requests import get
 from bs4 import BeautifulSoup
 from requests import RequestException
 
@@ -39,7 +39,7 @@ def getheaders():
 # --------------------------------------------------代理提取--------------------------------------------------------------
 # 西拉代理
 def getproxies3(urls):
-    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    req = get(urls, headers={'User-Agent': random.choice(getheaders())}).text
     soup = BeautifulSoup(req, 'lxml')
     tr = soup.find_all('tr')
     for td in tr:
@@ -51,7 +51,7 @@ def getproxies3(urls):
 
 # 泥马代理
 def getproxies6(urls):
-    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    req = get(urls, headers={'User-Agent': random.choice(getheaders())}).text
     soup = BeautifulSoup(req, 'lxml')
     tr = soup.find_all('tr')[1:]
 
@@ -62,7 +62,7 @@ def getproxies6(urls):
 
 # 太阳代理
 def sun_ip(urls):
-    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    req = get(urls, headers={'User-Agent': random.choice(getheaders())}).text
     soup = BeautifulSoup(req, 'lxml')
     lists = soup.find_all('div', class_='tr ip_tr')
     for li in lists:
@@ -73,7 +73,7 @@ def sun_ip(urls):
 
 # 快代理
 def quick(urls):
-    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    req = get(urls, headers={'User-Agent': random.choice(getheaders())}).text
     soup = BeautifulSoup(req, 'lxml')
     tr = soup.find_all('tr')
     for t in tr:
@@ -86,7 +86,7 @@ def quick(urls):
 
 # 开心代理||高可用全球免费代理库||小幻||云代理
 def general(urls):
-    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    req = get(urls, headers={'User-Agent': random.choice(getheaders())}).text
     soup = BeautifulSoup(req, 'lxml')
     tr = soup.find_all('tr')
     for t in tr:
@@ -153,3 +153,6 @@ def geturl():
 def ip_main():
     clear_file()
     geturl()
+
+
+# ip_main()
