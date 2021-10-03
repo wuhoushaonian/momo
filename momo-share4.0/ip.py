@@ -62,7 +62,7 @@ async def GetRequest(urls, mod=0):
                 await soup_page(page_source, mod=mod)
                 # 请求 和 响应时要加上阻塞 await
         except Exception as e:
-            print("访问失败:", e)
+            print("代理抓取失败: ", e)
 
 
 # 清洗页面 提取IP
@@ -115,4 +115,4 @@ def ip_main():
             GetRequest('http://www.ip3366.net/free/?stype=1&page=2'),
             ]
     asyncio.run(asyncio.wait(task))
-    print("代理抓取成功！")
+    print("代理抓取成功!")

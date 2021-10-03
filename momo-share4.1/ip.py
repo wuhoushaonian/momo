@@ -77,10 +77,11 @@ async def get_page(url, session, mod=0):
             await soup_page(page_source, mod=mod)
             # 请求 和 响应时要加上阻塞 await
     except Exception as e:
-        print("访问失败:", e)
+        print("代理抓取失败:", e)
 
 
 # 清洗页面 提取IP
+# 生成代理链接格式: http://ip:port
 async def soup_page(source, mod):
     if mod == 0:
         # 通用
@@ -126,6 +127,5 @@ def ip_main():
     print('正在抓取代理ip。。。')
     asyncio.run(create_aiohttp())
     print("代理抓取成功！")
-
 
 # ip_main()

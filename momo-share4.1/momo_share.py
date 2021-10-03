@@ -41,7 +41,7 @@ async def create_aiohttp(url, proxy_list):
     global n
     n = 0
     async with aiohttp.ClientSession() as session:  # 实例化一个请求对象
-        sem = asyncio.Semaphore(50)  # 设置限制并发次数
+        sem = asyncio.Semaphore(20)  # 设置限制并发次数
         # 生成任务列表
         task = [web_request(url=url, header=header, proxy=proxy, sem=sem, session=session) for proxy in proxy_list]
         await asyncio.wait(task)
@@ -58,7 +58,7 @@ async def web_request(url, header, proxy, sem, session):
                 await page(page_source)
                 # 请求 和 响应时要加上阻塞 await
         except Exception as e:
-            print("访问失败!", e)
+            print("网页请求失败! ", e)
 
 
 # 判断访问是否成功
@@ -67,13 +67,15 @@ async def page(page_source):
     if "墨墨" in page_source:
         n += 1
         print('访问成功!!!')
+    else:
+        print('访问失败! 页面无此元素。')
 
 
 def main():
     link = share_Link()  # 读取文件里的墨墨分享链接
     print("访问链接:", link)
     ip.ip_main()  # 抓取代理
-    proxies = [i.strip() for i in readfile()]  # 生成代理链接格式: http://ip:port
+    proxies = [i.strip() for i in readfile()]  # 生成代理列表
     asyncio.run(create_aiohttp(link, proxies))  # 异步访问
     print("任务完成!!!")
     # 桌面创建文件 呈现程序运行结果

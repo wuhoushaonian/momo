@@ -52,7 +52,7 @@ async def GetRequest(url, proxy):
                     await page(page_source)
                     # 请求 和 响应时要加上阻塞 await
             except Exception as e:
-                print("访问失败:", e)
+                print("网页请求失败! ", e)
 
 
 # 判断访问是否成功
@@ -60,9 +60,9 @@ async def page(page_source):
     global n
     if '墨墨' in page_source:
         n += 1
-        print('访问成功！')
+        print('访问成功!')
     else:
-        print('访问失败！')
+        print('访问失败! 页面无此元素。')
 
 
 def main():
