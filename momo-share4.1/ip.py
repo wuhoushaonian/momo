@@ -3,6 +3,7 @@ import re
 import random
 import asyncio
 import aiohttp
+import encodings.idna
 from bs4 import BeautifulSoup
 
 path = 'ip.txt'  # 文件保存地址
