@@ -20,7 +20,7 @@ def share_Link():
     import sys
     import os
     # 判断文件是否存在，不存在则创建
-    file = 'E:\\Desktop\\momo_link.txt'
+    file = 'E:\\Desktop\\momo_link.txt'  # 可根据自己电脑更改位置
     if os.path.isfile(file):
         fileopen = open(file, 'r', encoding='utf-8')
         momo_share_link = fileopen.readline()
@@ -79,6 +79,7 @@ def main():
     asyncio.run(create_aiohttp(link, proxies))  # 异步访问
     print("任务完成!!!")
     # 桌面创建文件 呈现程序运行结果
+    # 可根据自己电脑更改位置
     path = 'E:\\Desktop\\访问成功{}次.txt'.format(n)
     with open(path, 'w', encoding='utf-8') as f:
         f.close()

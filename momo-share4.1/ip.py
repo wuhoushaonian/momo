@@ -3,8 +3,8 @@ import re
 import random
 import asyncio
 import aiohttp
-import encodings.idna
 from bs4 import BeautifulSoup
+import encodings.idna
 
 path = 'ip.txt'  # 文件保存地址
 
@@ -52,20 +52,19 @@ async def record(text):
 async def create_aiohttp():
     async with aiohttp.ClientSession() as session:  # 实例化一个请求对象
         task = [
-            get_page('http://www.kxdaili.com/dailiip.html', session=session),
             get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session),
-            get_page('https://ip.jiangxianli.com/?page=1&country=%E4%B8%AD%E5%9B%BD', session=session),
-            get_page('https://ip.jiangxianli.com/?page=2&country=%E4%B8%AD%E5%9B%BD', session=session),
-            get_page('http://http.taiyangruanjian.com/free/page1/', mod=1, session=session),
-            get_page('http://http.taiyangruanjian.com/free/page2/', mod=1, session=session),
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
             get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
-            get_page('http://www.ip3366.net/free/?stype=1&page=1', session=session),
-            get_page('http://www.ip3366.net/free/?stype=1&page=2', session=session),
-            get_page('https://www.89ip.cn/index_1.html', mod=3, session=session),
-            get_page('https://www.89ip.cn/index_2.html', mod=3, session=session),
             get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
         ]
+        for i in range(2):
+            task.append(get_page('http://www.nimadaili.com/http/{}/'.format(i + 1), mod=4, session=session))
+            task.append(get_page('https://www.89ip.cn/index_{}.html'.format(i + 1), mod=3, session=session))
+            task.append(get_page('http://http.taiyangruanjian.com/free/page{}/'.format(i + 1), mod=1, session=session))
+            task.append(get_page('https://ip.jiangxianli.com/?page={}&country=%E4%B8%AD%E5%9B%BD'.format(i + 1), session=session))
+            task.append(get_page('http://www.kxdaili.com/dailiip/1/{}.html'.format(i + 1), session=session))
+            task.append(get_page('http://www.ip3366.net/free/?stype=1&page={}'.format(i + 1), session=session))
+
         await asyncio.wait(task)
 
 
@@ -121,6 +120,13 @@ async def soup_page(source, mod):
             ips = re.search(r'(\d+\.){3}\d+', str(t[0]))
             ports = re.search(r'\d{2,4}', str(t[1]))
             await record("http://{}:{}\n".format(ips.group(), ports.group()))
+    elif mod == 4:
+        # 泥马代理
+        soup = BeautifulSoup(source, 'lxml')
+        tr = soup.find_all('tr')[1:]
+        for i in tr:
+            ip_post = re.findall(r'<td>(.*?)</td>', str(i))[0]
+            await record('http://{}\n'.format(ip_post))
 
 
 def ip_main():
