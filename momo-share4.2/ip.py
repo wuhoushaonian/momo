@@ -8,7 +8,7 @@ import encodings.idna
 
 path = 'ip.txt'  # 文件保存地址
 
-
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 # 随机返回请求头
 async def getheaders():
     headers_list = [
