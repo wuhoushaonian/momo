@@ -3,7 +3,6 @@ import ip
 import random
 import time
 from selenium import webdriver
-
 global ip_counter
 
 
@@ -69,11 +68,33 @@ def interview(url, m):
     f1.close()
 
 
+# ---------------------------------------------------momo_share_link----------------------------------------------------
+def share_Link():
+    # 判断文件是否存在，不存在则创建
+    import sys
+    import os
+    # 判断文件是否存在，不存在则创建
+    file = 'E:\\Desktop\\momo_link.txt'
+    if os.path.isfile(file):
+        fileopen = open(file, 'r', encoding='utf-8')
+        momo_share_link = fileopen.readline()
+        # 判断是否有链接 无则终止程序
+        if momo_share_link == '':
+            fileopen.close()
+            sys.exit()
+        fileopen.close()
+        return momo_share_link
+    else:
+        os.close(os.open(file, os.O_CREAT))  # 创建文件
+        sys.exit()  # 终止程序
+
+
 # -------------------------------------------------------运行主函数-------------------------------------------------------
 def main():
-    url = input("请输入待访问链接:")
+    url = share_Link()
+    print("分享链接是:" + str(url))
     # times = int(input('请输入访问次数:'))
-    ip.main()  # 抓取代理
+    ip.ip_main()  # 抓取代理
     interview(url, 25)  # 访问分享链接
 
 

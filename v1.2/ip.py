@@ -1,9 +1,9 @@
 # encoding:utf-8
 import re
 import random
-import requests
+from requests import get
 from bs4 import BeautifulSoup
-import time
+from requests import RequestException
 
 path = 'ip.txt'  # 文件保存地址
 
@@ -36,10 +36,10 @@ def getheaders():
     return headers_list
 
 
-# -----------------------------------------------代理抓取3--------------------------------------------------------------
+# --------------------------------------------------代理提取--------------------------------------------------------------
 # 西拉代理
 def getproxies3(urls):
-    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    req = get(urls, headers={'User-Agent': random.choice(getheaders())}).text
     soup = BeautifulSoup(req, 'lxml')
     tr = soup.find_all('tr')
     for td in tr:
@@ -49,16 +49,52 @@ def getproxies3(urls):
         record('{}\n'.format(res[0]))
 
 
-# -----------------------------------------------代理抓取6--------------------------------------------------------------
 # 泥马代理
 def getproxies6(urls):
-    req = requests.get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    req = get(urls, headers={'User-Agent': random.choice(getheaders())}).text
     soup = BeautifulSoup(req, 'lxml')
     tr = soup.find_all('tr')[1:]
 
     for i in tr:
         ip_post = re.findall(r'<td>(.*?)</td>', str(i))[0]
         record('{}\n'.format(ip_post))
+
+
+# 太阳代理
+def sun_ip(urls):
+    req = get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    soup = BeautifulSoup(req, 'lxml')
+    lists = soup.find_all('div', class_='tr ip_tr')
+    for li in lists:
+        ips = re.findall(r'<div\sclass="td\std-4">(.*?)</div>', str(li))
+        posts = re.findall(r'<div\sclass="td\std-2">(.*?)</div>', str(li))
+        record('{}:{}\n'.format(ips[0], posts[0]))
+
+
+# 快代理
+def quick(urls):
+    req = get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    soup = BeautifulSoup(req, 'lxml')
+    tr = soup.find_all('tr')
+    for t in tr:
+        ips = re.findall(r'<td\s.*?="IP">(.*?)</td>', str(t))
+        posts = re.findall(r'<td\s.*?="PORT">(.*?)</td>', str(t))
+        if not ips or not posts:
+            continue
+        record("{}:{}\n".format(ips[0], posts[0]))
+
+
+# 开心代理||高可用全球免费代理库||小幻||云代理
+def general(urls):
+    req = get(urls, headers={'User-Agent': random.choice(getheaders())}).text
+    soup = BeautifulSoup(req, 'lxml')
+    tr = soup.find_all('tr')
+    for t in tr:
+        ips = re.search(r'(\d+\.){3}\d+', str(t))
+        posts = re.search(r'<td>(\d{1,4})</td>', str(t))
+        if not ips or not posts:
+            continue
+        record("{}:{}\n".format(ips.group(), posts.group(1)))
 
 
 # -----------------------------------------------清空文档-----------------------------------------------------------------
@@ -76,24 +112,47 @@ def record(text):
 # -----------------------------------------------网址生成-----------------------------------------------------------------
 def geturl():
     print("正在抓取代理IP。。。")
-    for i in range(5):
-        try:
-            getproxies6('http://www.nimadaili.com/gaoni/{}/'.format(i + 1))
-        finally:
-            time.sleep(2)
+    for i in range(2):
+        if i < 1:
+            # finally:
+            #     pass
+            # getproxies6('http://www.nimadaili.com/gaoni/{}/'.format(i + 1))
+            # getproxies3('http://www.xiladaili.com/http/{}/'.format(i + 1))
+            try:
+                general('http://www.kxdaili.com/dailiip.html')
+            except RequestException:
+                pass
+            try:
+                quick('https://www.kuaidaili.com/free/inha/{}/'.format(i + 1))
+                quick('https://www.kuaidaili.com/free/intr/{}/'.format(i + 1))
+            except RequestException:
+                pass
+            try:
+                general('https://ip.ihuan.me/address/5Lit5Zu9.html?page=b97827cc')
+            except RequestException:
+                pass
 
         try:
-            getproxies3('http://www.xiladaili.com/http/{}/'.format(i + 1))
-        finally:
-            time.sleep(2)
+            general('https://ip.jiangxianli.com/?page={}&country=%E4%B8%AD%E5%9B%BD'.format(i + 1))
+        except RequestException:
+            pass
+        try:
+            sun_ip('http://http.taiyangruanjian.com/free/page{}/'.format(i + 1))
+        except RequestException:
+            pass
+
+        try:
+            general('http://www.ip3366.net/free/?stype=1&page={}'.format(i + 1))
+        except RequestException:
+            pass
+
     print('代理ip抓取完成！！！')
 
 
 # -----------------------------------------------运行主函数---------------------------------------------------------------
-def main():
+def ip_main():
     clear_file()
     geturl()
 
-#
-# if __name__ == '__main__':
-#     main()
+
+# ip_main()
