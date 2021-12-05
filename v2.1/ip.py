@@ -4,6 +4,7 @@ import random
 import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
+import encodings.idna
 
 path = 'ip.txt'  # 文件保存地址
 
@@ -48,26 +49,40 @@ async def record(text):
 
 
 # 实例化请求对象
-async def GetRequest(urls, mod=0):
-    """
-    @param urls: url地址
-    @param mod: 用于区分不同网页内容的情况,对网页内容进行清洗,以提取代理IP
-    """
-    header = await getheaders()  # 设置请求头
+async def create_aiohttp():
     async with aiohttp.ClientSession() as session:  # 实例化一个请求对象
-        await asyncio.sleep(1)
-        try:
-            async with await session.get(url=urls, headers=header) as response:  # 异步请求
-                page_source = await response.text()  # 返回字符串形式的相应数据
-                await soup_page(page_source, mod=mod)
-                # 请求 和 响应时要加上阻塞 await
-        except Exception as e:
-            print("代理抓取失败: ", e)
+        task = [
+            get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session),
+            get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
+            get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
+            get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
+        ]
+        for i in range(2):
+            task.append(get_page('http://www.nimadaili.com/http/{}/'.format(i + 1), mod=4, session=session))
+            task.append(get_page('https://www.89ip.cn/index_{}.html'.format(i + 1), mod=3, session=session))
+            task.append(get_page('http://http.taiyangruanjian.com/free/page{}/'.format(i + 1), mod=1, session=session))
+            task.append(get_page('https://ip.jiangxianli.com/?page={}&country=%E4%B8%AD%E5%9B%BD'.format(i + 1), session=session))
+            task.append(get_page('http://www.kxdaili.com/dailiip/1/{}.html'.format(i + 1), session=session))
+            task.append(get_page('http://www.ip3366.net/free/?stype=1&page={}'.format(i + 1), session=session))
+
+        await asyncio.wait(task)
+
+
+# 访问网页
+async def get_page(url, session, mod=0):
+    header = await getheaders()
+    try:
+        async with await session.get(url=url, headers=header) as response:  # 异步请求
+            page_source = await response.text()  # 返回字符串形式的相应数据
+            await soup_page(page_source, mod=mod)
+            # 请求 和 响应时要加上阻塞 await
+    except Exception as e:
+        print("代理抓取失败:", e)
 
 
 # 清洗页面 提取IP
+# 生成代理链接格式: http://ip:port
 async def soup_page(source, mod):
-    # 可依据判断mod 添加对应网站内容的清理方法
     if mod == 0:
         # 通用
         soup = BeautifulSoup(source, 'lxml')
@@ -96,23 +111,28 @@ async def soup_page(source, mod):
             if not ips or not posts:
                 continue
             await record("http://{}:{}\n".format(ips[0], posts[0]))
+    elif mod == 3:
+        # 89代理
+        soup = BeautifulSoup(source, 'lxml')
+        tr = soup.select('tr')[1:]
+        for td in tr:
+            t = td.select('td')
+            ips = re.search(r'(\d+\.){3}\d+', str(t[0]))
+            ports = re.search(r'\d{2,4}', str(t[1]))
+            await record("http://{}:{}\n".format(ips.group(), ports.group()))
+    elif mod == 4:
+        # 泥马代理
+        soup = BeautifulSoup(source, 'lxml')
+        tr = soup.find_all('tr')[1:]
+        for i in tr:
+            ip_post = re.findall(r'<td>(.*?)</td>', str(i))[0]
+            await record('http://{}\n'.format(ip_post))
 
 
 def ip_main():
-    clear_file()
+    clear_file()  # 清空存放代理文件
     print('正在抓取代理ip。。。')
+    asyncio.run(create_aiohttp())
+    print("代理抓取成功！")
 
-    # 添加异步任务
-    task = [GetRequest('http://www.kxdaili.com/dailiip.html'),
-            GetRequest('http://www.kxdaili.com/dailiip/2/1.html'),
-            GetRequest('https://ip.jiangxianli.com/?page=1&country=%E4%B8%AD%E5%9B%BD'),
-            GetRequest('https://ip.jiangxianli.com/?page=2&country=%E4%B8%AD%E5%9B%BD'),
-            GetRequest('http://http.taiyangruanjian.com/free/page1/', mod=1),
-            GetRequest('http://http.taiyangruanjian.com/free/page2/', mod=1),
-            GetRequest('https://www.kuaidaili.com/free/inha/1/', mod=2),
-            GetRequest('https://www.kuaidaili.com/free/intr/2/', mod=2),
-            GetRequest('http://www.ip3366.net/free/?stype=1&page=1'),
-            GetRequest('http://www.ip3366.net/free/?stype=1&page=2'),
-            ]
-    asyncio.run(asyncio.wait(task))
-    print("代理抓取成功!")
+# ip_main()
