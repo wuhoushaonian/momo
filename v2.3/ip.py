@@ -61,7 +61,7 @@ async def create_aiohttp():
             task.append(get_page('http://www.nimadaili.com/http/{}/'.format(i + 1), mod=4, session=session))
             task.append(get_page('https://www.89ip.cn/index_{}.html'.format(i + 1), mod=3, session=session))
             task.append(get_page('http://http.taiyangruanjian.com/free/page{}/'.format(i + 1), mod=1, session=session))
-            task.append(get_page('https://ip.jiangxianli.com/?page={}&country=%E4%B8%AD%E5%9B%BD'.format(i + 1),
+            task.append(get_page('http://ip.jiangxianli.com/?page={}&country=%E4%B8%AD%E5%9B%BD'.format(i + 1),
                                  session=session))
             task.append(get_page('http://www.kxdaili.com/dailiip/1/{}.html'.format(i + 1), session=session))
             task.append(get_page('http://www.ip3366.net/free/?stype=1&page={}'.format(i + 1), session=session))
