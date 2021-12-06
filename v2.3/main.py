@@ -3,8 +3,6 @@ import asyncio
 import aiohttp
 import ip
 
-global n  # 记录访问成功次数
-
 # 可根据自己电脑更改位置
 link_path = ".\\momo_link.txt"
 
@@ -63,6 +61,9 @@ async def web_request(url, header, proxy, sem, session):
                 # 请求 和 响应时要加上阻塞 await
         except Exception as e:
             print("网页请求失败! ", e)
+
+
+global n  # 记录访问成功次数
 
 
 # 判断访问是否成功
