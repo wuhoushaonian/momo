@@ -1,4 +1,4 @@
-﻿﻿﻿﻿### 使用 Github Actions 进行墨墨分享（每小时执行一次）
+﻿### 使用 Github Actions 进行墨墨分享（每小时执行一次）
 
 #### 1. fork 项目到自己项目
 
@@ -8,7 +8,7 @@
 
 <img src="https://s2.loli.net/2021/12/11/gHLJ8NuWfAkyZci.png" alt="image-20211211060301477" style="zoom:50%;" />
 
-<img src="../../../../AppData/Roaming/Typora/typora-user-images/image-20211211060339439.png" alt="image-20211211060339439" style="zoom:50%;" />
+<img src="https://s2.loli.net/2021/12/11/o31DrWHvAsVbgje.png" alt="image-20211211060339439" style="zoom:50%;" />
 
 #### 3. 添加 墨墨分享链接（需要每日更新）
 
