@@ -4,6 +4,7 @@ name: momo
 on:
   schedule:
     - cron: '0 * * * *'
+    # 更改执行时间/次数 具体可以百度 cron 的配置进行更改 
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
