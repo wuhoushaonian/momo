@@ -26,5 +26,6 @@
 
 <img src="https://s2.loli.net/2021/12/11/r8NYpROZiFajSoh.png" alt="image-20211211053542775" style="zoom: 50%;" />
 
-
+#### 6. 运行结果
+运行结果可在`build`下的`Working`中查看。
 
