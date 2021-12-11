@@ -131,7 +131,7 @@ async def soup_page(source, mod):
         # https://www.proxy-list.download/api/v1/get?type=http
         ip_list = source.split('\r\n')[:-1]
         for ip in ip_list:
-            listIP.append(ip)
+            listIP.append('http://' + ip)
 
 
 def ip_main():
