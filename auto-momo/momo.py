@@ -132,7 +132,7 @@ async def soup_page(source, mod):
 
 def ip_main():
     asyncio.run(create_aiohttp_ip())
-    print("代理抓取成功！")
+    print("代理抓取成功,共{}个代理ip地址。".format(len(listIP)))
 
 
 # 实例化请求对象
