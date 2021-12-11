@@ -100,7 +100,7 @@
 
 具体操作在`auto-momo`文件夹下。
 
-自动执行默认是1小时,按要求可在`\.github\workflows\main.yaml`下的`- cron:`进行更改。
+自动执行默认是1小时,按需求可在`\.github\workflows\main.yaml`下的`- cron:`进行更改。
 
 ## 声明
 
