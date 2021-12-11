@@ -18,7 +18,7 @@
 
 #### 4. 测试（配置好 LINK 执行此步骤，绿色为成功）
 
-<img src="https://s2.loli.net/2021/12/11/peFCZBKS5qTxyXl.png" alt="image-20211211060550225" style="zoom:50%;" />
+<img src="https://s2.loli.net/2021/12/11/tFYlw7xBH2NKMjI.png" alt="image-20211211060550225" style="zoom:50%;" />
 
 <img src="https://s2.loli.net/2021/12/11/ETbCdjOg8VIexfp.png" alt="image-20211211061416222" style="zoom:50%;" />
 

@@ -14,10 +14,10 @@ link = 'link'  # 设置link
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
-
 # 如果检测到程序在 github actions 内运行，那么读取环境变量中的登录信息
 if os.environ.get('GITHUB_RUN_ID', None):
     link = os.environ['link']
+
 
 # 随机返回请求头
 async def getheaders():
