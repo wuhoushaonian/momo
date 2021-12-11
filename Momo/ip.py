@@ -56,13 +56,12 @@ async def create_aiohttp():
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
             get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
             get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
+            get_page(url='https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
         ]
         for i in range(2):
             task.append(get_page('http://www.nimadaili.com/http/{}/'.format(i + 1), mod=4, session=session))
             task.append(get_page('https://www.89ip.cn/index_{}.html'.format(i + 1), mod=3, session=session))
             task.append(get_page('http://http.taiyangruanjian.com/free/page{}/'.format(i + 1), mod=1, session=session))
-            task.append(get_page('http://ip.jiangxianli.com/?page={}&country=%E4%B8%AD%E5%9B%BD'.format(i + 1),
-                                 session=session))
             task.append(get_page('http://www.kxdaili.com/dailiip/1/{}.html'.format(i + 1), session=session))
             task.append(get_page('http://www.ip3366.net/free/?stype=1&page={}'.format(i + 1), session=session))
 
@@ -128,6 +127,10 @@ async def soup_page(source, mod):
         for i in tr:
             ip_post = re.findall(r'<td>(.*?)</td>', str(i))[0]
             await record('http://{}\n'.format(ip_post))
+    elif mod == 5:
+        ip_list = source.split('\r\n')[:-1]
+        one = 'http://{}\n'.format(ip_list[0])
+        await record(one + '\nhttp://'.join(ip_list)[1:])
 
 
 def ip_main():
@@ -135,5 +138,6 @@ def ip_main():
     print('正在抓取代理ip。。。')
     asyncio.run(create_aiohttp())
     print("代理抓取成功！")
+
 
 # ip_main()
