@@ -145,7 +145,7 @@ async def create_aiohttp(url, proxy_list):
     global n
     n = 0
     async with aiohttp.ClientSession() as session:  # 实例化一个请求对象
-        sem = asyncio.Semaphore(80)  # 设置限制并发次数
+        sem = asyncio.Semaphore(20)  # 设置限制并发次数
         # 生成任务列表
         task = [web_request(url=url, header=header, proxy=proxy, sem=sem, session=session) for proxy in proxy_list]
         await asyncio.wait(task)
