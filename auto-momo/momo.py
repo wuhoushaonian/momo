@@ -131,7 +131,6 @@ async def soup_page(source, mod):
 
 
 def ip_main():
-    print('正在抓取代理ip。。。')
     asyncio.run(create_aiohttp_ip())
     print("代理抓取成功！")
 
@@ -174,7 +173,7 @@ def main():
     ip_main()  # 抓取代理
     proxies = [i.strip() for i in listIP]  # 生成代理列表
     asyncio.run(create_aiohttp(link, proxies))  # 异步访问
-    print("访问成功{}次".format(n))
+    print("访问成功{}次。".format(n))
 
 
 if __name__ == '__main__':
