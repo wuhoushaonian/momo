@@ -168,7 +168,7 @@ async def web_request(url, header, proxy, sem, session):
 # 判断访问是否成功
 async def page(page_source):
     global n
-    if "墨墨" in page_source:
+    if "学习天数" in page_source:
         n += 1
 
 
