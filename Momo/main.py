@@ -85,7 +85,7 @@ def main():
     print("任务完成!!!")
 
     # 呈现程序运行结果。可根据自己电脑更改位置
-    reminder_path = '.\\访问成功{}次.txt'.format(n)
+    reminder_path = f'.\\访问成功{n}次.txt'
     # 创建运行结果提示文件
     with open(reminder_path, 'w', encoding='utf-8') as f:
         f.close()

@@ -56,14 +56,14 @@ async def create_aiohttp():
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
             get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
             get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
-            get_page(url='https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
+            get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
         ]
         for i in range(2):
-            task.append(get_page('http://www.nimadaili.com/http/{}/'.format(i + 1), mod=4, session=session))
-            task.append(get_page('https://www.89ip.cn/index_{}.html'.format(i + 1), mod=3, session=session))
-            task.append(get_page('http://http.taiyangruanjian.com/free/page{}/'.format(i + 1), mod=1, session=session))
-            task.append(get_page('http://www.kxdaili.com/dailiip/1/{}.html'.format(i + 1), session=session))
-            task.append(get_page('http://www.ip3366.net/free/?stype=1&page={}'.format(i + 1), session=session))
+            task.append(get_page(f'http://www.nimadaili.com/http/{i + 1}/', mod=4, session=session))
+            task.append(get_page(f'https://www.89ip.cn/index_{i + 1}.html', mod=3, session=session))
+            task.append(get_page(f'http://http.taiyangruanjian.com/free/page{i + 1}/', mod=1, session=session))
+            task.append(get_page(f'http://www.kxdaili.com/dailiip/1/{i + 1}.html', session=session))
+            task.append(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session))
 
         await asyncio.wait(task)
 
@@ -92,7 +92,7 @@ async def soup_page(source, mod):
             posts = re.search(r'<td>(\d{1,4})</td>', str(t))
             if not ips or not posts:
                 continue
-            await record("http://{}:{}\n".format(ips.group(), posts.group(1)))
+            await record(f"http://{ips.group()}:{posts.group(1)}\n")
     elif mod == 1:
         # 太阳
         soup = BeautifulSoup(source, 'lxml')
@@ -100,7 +100,7 @@ async def soup_page(source, mod):
         for li in lists:
             ips = re.findall(r'<div\sclass="td\std-4">(.*?)</div>', str(li))
             posts = re.findall(r'<div\sclass="td\std-2">(.*?)</div>', str(li))
-            await record('http://{}:{}\n'.format(ips[0], posts[0]))
+            await record(f'http://{ips[0]}:{posts[0]}\n')
     elif mod == 2:
         # 快代理
         soup = BeautifulSoup(source, 'lxml')
@@ -110,7 +110,7 @@ async def soup_page(source, mod):
             posts = re.findall(r'<td\s.*?="PORT">(.*?)</td>', str(t))
             if not ips or not posts:
                 continue
-            await record("http://{}:{}\n".format(ips[0], posts[0]))
+            await record(f"http://{ips[0]}:{posts[0]}\n")
     elif mod == 3:
         # 89代理
         soup = BeautifulSoup(source, 'lxml')
@@ -119,18 +119,19 @@ async def soup_page(source, mod):
             t = td.select('td')
             ips = re.search(r'(\d+\.){3}\d+', str(t[0]))
             ports = re.search(r'\d{2,4}', str(t[1]))
-            await record("http://{}:{}\n".format(ips.group(), ports.group()))
+            await record(f"http://{ips.group()}:{ports.group()}\n")
     elif mod == 4:
         # 泥马代理
         soup = BeautifulSoup(source, 'lxml')
         tr = soup.find_all('tr')[1:]
         for i in tr:
             ip_post = re.findall(r'<td>(.*?)</td>', str(i))[0]
-            await record('http://{}\n'.format(ip_post))
+            await record(f'http://{ip_post}\n')
     elif mod == 5:
         ip_list = source.split('\r\n')[:-1]
-        one = 'http://{}\n'.format(ip_list[0])
-        await record(one + '\nhttp://'.join(ip_list)[1:])
+        one = f'http://{ip_list[0]}\n'
+        res = '\nhttp://'.join(ip_list)
+        await record(f'{one}{res}\n')
 
 
 def ip_main():
@@ -138,6 +139,5 @@ def ip_main():
     print('正在抓取代理ip。。。')
     asyncio.run(create_aiohttp())
     print("代理抓取成功！")
-
 
 # ip_main()

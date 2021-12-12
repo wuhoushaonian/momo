@@ -54,14 +54,14 @@ async def create_aiohttp_ip():
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
             get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
             get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
-            get_page(url='https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
+            get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
         ]
         for i in range(2):
-            task.append(get_page('http://www.nimadaili.com/http/{}/'.format(i + 1), mod=4, session=session))
-            task.append(get_page('https://www.89ip.cn/index_{}.html'.format(i + 1), mod=3, session=session))
-            task.append(get_page('http://http.taiyangruanjian.com/free/page{}/'.format(i + 1), mod=1, session=session))
-            task.append(get_page('http://www.kxdaili.com/dailiip/1/{}.html'.format(i + 1), session=session))
-            task.append(get_page('http://www.ip3366.net/free/?stype=1&page={}'.format(i + 1), session=session))
+            task.append(get_page(f'http://www.nimadaili.com/http/{i + 1}/', mod=4, session=session))
+            task.append(get_page(f'https://www.89ip.cn/index_{i + 1}.html', mod=3, session=session))
+            task.append(get_page(f'http://http.taiyangruanjian.com/free/page{i + 1}/', mod=1, session=session))
+            task.append(get_page(f'http://www.kxdaili.com/dailiip/1/{i + 1}.html', session=session))
+            task.append(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session))
 
         await asyncio.wait(task)
 
@@ -75,7 +75,7 @@ async def get_page(url, session, mod=0):
             await soup_page(page_source, mod=mod)
             # 请求 和 响应时要加上阻塞 await
     except Exception as e:
-        print("代理抓取失败:", e)
+        print("抓取失败:", e)
 
 
 # 清洗页面 提取IP
@@ -90,7 +90,7 @@ async def soup_page(source, mod):
             posts = re.search(r'<td>(\d{1,4})</td>', str(t))
             if not ips or not posts:
                 continue
-            listIP.append('http://' + ips.group() + ':' + posts.group(1))
+            listIP.append(f'http://{ips.group()}:{posts.group(1)}')
 
     elif mod == 1:
         # 太阳
@@ -99,7 +99,7 @@ async def soup_page(source, mod):
         for li in lists:
             ips = re.findall(r'<div\sclass="td\std-4">(.*?)</div>', str(li))
             posts = re.findall(r'<div\sclass="td\std-2">(.*?)</div>', str(li))
-            listIP.append('http://' + ips[0] + ':' + posts[0])
+            listIP.append(f'http://{ips[0]}:{posts[0]}')
 
     elif mod == 2:
         # 快代理
@@ -110,7 +110,7 @@ async def soup_page(source, mod):
             posts = re.findall(r'<td\s.*?="PORT">(.*?)</td>', str(t))
             if not ips or not posts:
                 continue
-            listIP.append('http://' + ips[0] + ':' + posts[0])
+            listIP.append(f'http://{ips[0]}:{posts[0]}')
     elif mod == 3:
         # 89代理
         soup = BeautifulSoup(source, 'lxml')
@@ -119,24 +119,24 @@ async def soup_page(source, mod):
             t = td.select('td')
             ips = re.search(r'(\d+\.){3}\d+', str(t[0]))
             posts = re.search(r'\d{2,4}', str(t[1]))
-            listIP.append('http://' + ips.group() + ':' + posts.group())
+            listIP.append(f'http://{ips.group()}:{posts.group()}')
     elif mod == 4:
         # 泥马代理
         soup = BeautifulSoup(source, 'lxml')
         tr = soup.find_all('tr')[1:]
         for i in tr:
             ip_post = re.findall(r'<td>(.*?)</td>', str(i))[0]
-            listIP.append('http://' + ip_post)
+            listIP.append(f'http://{ip_post}')
     elif mod == 5:
         # https://www.proxy-list.download/api/v1/get?type=http
         ip_list = source.split('\r\n')[:-1]
         for ip in ip_list:
-            listIP.append('http://' + ip)
+            listIP.append(f'http://{ip}')
 
 
 def ip_main():
     asyncio.run(create_aiohttp_ip())
-    print("代理抓取成功,共{}个代理ip地址。".format(len(listIP)))
+    print(f"代理ip抓取完成,共{len(listIP)}个可用代理ip地址。")
 
 
 # 实例化请求对象
@@ -173,11 +173,10 @@ async def page(page_source):
 
 
 def main():
-    print("访问链接:", link)
     ip_main()  # 抓取代理
     proxies = [i.strip() for i in listIP]  # 生成代理列表
     asyncio.run(create_aiohttp(link, proxies))  # 异步访问
-    print("访问成功{}次。".format(n))
+    print(f"访问成功{n}次。")
 
 
 if __name__ == '__main__':
