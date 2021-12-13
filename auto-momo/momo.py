@@ -75,7 +75,7 @@ async def get_page(url, session, mod=0):
             await soup_page(page_source, mod=mod)
             # 请求 和 响应时要加上阻塞 await
     except Exception as e:
-        print("抓取失败:", e)
+        print(f"['{url}']抓取失败:", e)
 
 
 # 清洗页面 提取IP
