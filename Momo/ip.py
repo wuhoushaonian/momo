@@ -57,6 +57,8 @@ async def create_aiohttp():
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
             get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
             get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
+            get_page('http://www.66ip.cn/areaindex_5/1.html', session=session),
+            get_page('http://www.66ip.cn/areaindex_14/1.html', session=session),
             get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
         ]
         for i in range(2):
@@ -65,6 +67,7 @@ async def create_aiohttp():
             task.append(get_page(f'http://http.taiyangruanjian.com/free/page{i + 1}/', mod=1, session=session))
             task.append(get_page(f'http://www.kxdaili.com/dailiip/1/{i + 1}.html', session=session))
             task.append(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session))
+            task.append(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session))
 
         await asyncio.wait(task)
 
