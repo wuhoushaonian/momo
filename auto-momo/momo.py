@@ -4,7 +4,7 @@ from os import environ
 from random import choice
 import asyncio
 # import aiohttp
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientTimeout
 import uvloop
 from bs4 import BeautifulSoup
 
@@ -55,6 +55,8 @@ async def create_aiohttp_ip():
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
             get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
             get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
+            get_page('http://www.66ip.cn/areaindex_5/1.html', session=session),
+            get_page('http://www.66ip.cn/areaindex_14/1.html', session=session),
             get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
         ]
         for i in range(2):
@@ -63,6 +65,7 @@ async def create_aiohttp_ip():
             task.append(get_page(f'http://http.taiyangruanjian.com/free/page{i + 1}/', mod=1, session=session))
             task.append(get_page(f'http://www.kxdaili.com/dailiip/1/{i + 1}.html', session=session))
             task.append(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session))
+            task.append(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session))
 
         await asyncio.wait(task)
 
@@ -70,8 +73,9 @@ async def create_aiohttp_ip():
 # 访问网页
 async def get_page(url, session, mod=0):
     header = await getheaders()
+    timeout = ClientTimeout(total=30)  # 设置请求超时时间
     try:
-        async with await session.get(url=url, headers=header) as response:  # 异步请求
+        async with await session.get(url=url, headers=header, timeout=timeout) as response:  # 异步请求
             page_source = await response.text()  # 返回字符串形式的相应数据
             await soup_page(page_source, mod=mod)
             # 请求 和 响应时要加上阻塞 await
