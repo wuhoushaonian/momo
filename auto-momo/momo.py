@@ -1,9 +1,10 @@
 # encoding:utf-8
 import re
-import os
-import random
+from os import environ
+from random import choice
 import asyncio
-import aiohttp
+# import aiohttp
+from aiohttp import ClientSession
 import uvloop
 from bs4 import BeautifulSoup
 
@@ -15,8 +16,8 @@ link = 'link'  # 设置link
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 # 如果检测到程序在 github actions 内运行，那么读取环境变量中的登录信息
-if os.environ.get('GITHUB_RUN_ID', None):
-    link = os.environ['link']
+if environ.get('GITHUB_RUN_ID', None):
+    link = environ['link']
 
 
 # 随机返回请求头
@@ -42,13 +43,13 @@ async def getheaders():
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24",
         "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24",
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36", ]
-    headers = {'User-Agent': random.choice(headers_list)}
+    headers = {'User-Agent': choice(headers_list)}
     return headers
 
 
 # 实例化请求对象
 async def create_aiohttp_ip():
-    async with aiohttp.ClientSession() as session:  # 实例化一个请求对象
+    async with ClientSession() as session:  # 实例化一个请求对象
         task = [
             get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session),
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
@@ -144,7 +145,7 @@ async def create_aiohttp(url, proxy_list):
     header = await getheaders()  # 设置请求头
     global n
     n = 0
-    async with aiohttp.ClientSession() as session:  # 实例化一个请求对象
+    async with ClientSession() as session:  # 实例化一个请求对象
         sem = asyncio.Semaphore(20)  # 设置限制并发次数
         # 生成任务列表
         task = [web_request(url=url, header=header, proxy=proxy, sem=sem, session=session) for proxy in proxy_list]
@@ -161,6 +162,7 @@ async def web_request(url, header, proxy, sem, session):
                 page_source = await response.text()  # 返回字符串形式的相应数据
                 await page(page_source)
                 # 请求 和 响应时要加上阻塞 await
+                raise response.status
         except Exception as e:
             pass
 

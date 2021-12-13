@@ -1,8 +1,9 @@
 # encoding:utf-8
 import re
-import random
+from random import choice
 import asyncio
-import aiohttp
+# import aiohttp
+from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 import encodings.idna
 
@@ -32,7 +33,7 @@ async def getheaders():
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24",
         "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24",
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36", ]
-    headers = {'User-Agent': random.choice(headers_list)}
+    headers = {'User-Agent': choice(headers_list)}
     return headers
 
 
@@ -50,7 +51,7 @@ async def record(text):
 
 # 实例化请求对象
 async def create_aiohttp():
-    async with aiohttp.ClientSession() as session:  # 实例化一个请求对象
+    async with ClientSession() as session:  # 实例化一个请求对象
         task = [
             get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session),
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),

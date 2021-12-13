@@ -1,7 +1,8 @@
 # encoding:utf-8
 import asyncio
-import aiohttp
-import ip
+from aiohttp import ClientSession
+from ip import ip_main
+from ip import getheaders
 
 # 可根据自己电脑更改位置
 link_path = ".\\momo_link.txt"
@@ -39,10 +40,10 @@ asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 # 实例化请求对象
 async def create_aiohttp(url, proxy_list):
-    header = await ip.getheaders()  # 设置请求头
+    header = await getheaders()  # 设置请求头
     global n
     n = 0
-    async with aiohttp.ClientSession() as session:  # 实例化一个请求对象
+    async with ClientSession() as session:  # 实例化一个请求对象
         sem = asyncio.Semaphore(80)  # 设置限制并发次数
         # 生成任务列表
         task = [web_request(url=url, header=header, proxy=proxy, sem=sem, session=session) for proxy in proxy_list]
@@ -79,7 +80,7 @@ async def page(page_source):
 def main():
     link = share_Link()  # 读取文件里的墨墨分享链接
     print("访问链接:", link)
-    ip.ip_main()  # 抓取代理
+    ip_main()  # 抓取代理
     proxies = [i.strip() for i in readfile()]  # 生成代理列表
     asyncio.run(create_aiohttp(link, proxies))  # 异步访问
     print("任务完成!!!")
