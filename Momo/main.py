@@ -1,8 +1,7 @@
 # encoding:utf-8
 import asyncio
 from aiohttp import ClientSession
-from ip import ip_main
-from ip import getheaders
+from ip import ip_main, getheaders
 
 # 可根据自己电脑更改位置
 link_path = ".\\momo_link.txt"
