@@ -14,7 +14,7 @@ listIP = []  # 保存IP地址
 link = 'link'  # 设置link
 
 # asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-uvloop.install()
+
 
 # 如果检测到程序在 github actions 内运行，那么读取环境变量中的登录信息
 if environ.get('GITHUB_RUN_ID', None):
@@ -182,6 +182,7 @@ async def page(page_source):
 def main():
     ip_main()  # 抓取代理
     proxies = [i.strip() for i in listIP]  # 生成代理列表
+    uvloop.install()
     asyncio.run(create_aiohttp(link, proxies))  # 异步访问
     print(f"墨墨分享链接访问成功{n}次。")
 
