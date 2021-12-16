@@ -167,8 +167,7 @@ async def web_request(url, header, proxy, sem, session):
                 page_source = await response.text()  # 返回字符串形式的相应数据
                 await page(page_source)
                 # 请求 和 响应时要加上阻塞 await
-                raise response.status
-        except Exception as e:
+        except Exception:
             pass
 
 
