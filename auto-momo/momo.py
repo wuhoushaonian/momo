@@ -73,7 +73,7 @@ async def get_page(url, session, mod=0):
     header = await getheaders()
     timeout = ClientTimeout(total=30)  # 设置请求超时时间
     try:
-        async with await session.get(url=url, headers=header, timeout=timeout) as response:  # 异步请求
+        async with await session.get(url=url, headers=header, timeout=timeout, verfy=False) as response:  # 异步请求
             page_source = await response.text()  # 返回字符串形式的相应数据
             await soup_page(page_source, mod=mod)
             # 请求 和 响应时要加上阻塞 await
