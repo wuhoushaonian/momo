@@ -51,8 +51,15 @@ async def getheaders():
 # 实例化请求对象
 async def create_aiohttp_ip():
     async with ClientSession(connector=TCPConnector(verify_ssl=False)) as session:  # 实例化一个请求对象
+        # 获取站大爷分享ip地址
+        async with await session.get(url='https://www.zdaye.com/dayProxy.html') as response:
+            page_source = await response.text()
+            content = re.findall(r'<a\shref="(/dayProxy/ip/\d+.html)">', page_source)[0]
+            get_url = f'https://www.zdaye.com{content}'
+
         task = [
             get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session),
+            get_page(get_url, session=session, mod=7),
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
             get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
             get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
@@ -141,6 +148,14 @@ async def soup_page(source, mod):
         port_list = re.findall(r"<span class='f-port'>(\d+)</span>", source)
         for i in range(len(ip_list)):
             listIP.append(f'http://{ip_list[i]}:{port_list[i]}')
+    elif mod == 7:
+        # 站大爷
+        soup = BeautifulSoup(source, 'lxml')
+        tr = soup.find_all('tr')
+        for t in tr:
+            get_ip = re.search(r'(\d+\.){3}\d+', str(t))
+            get_post = re.search(r'<td>(\d{1,4}).*?</td>', str(t))
+            listIP.append(f'{get_ip.group(1)}:{get_post.group(1).strip()}')
 
 
 def ip_main():
