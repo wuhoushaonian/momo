@@ -54,9 +54,9 @@ async def create_aiohttp():
     async with ClientSession(connector=TCPConnector(verify_ssl=False)) as session:  # 实例化一个请求对象
 
         # 获取站大爷分享ip地址
-        async with await session.get(url='https://www.zdaye.com/dayProxy.html') as response:
-            page_source = await response.text()
-            content = re.findall(r'<a\shref="(/dayProxy/ip/\d+.html)">', page_source)[0]
+        async with await session.get(url='https://www.zdaye.com/dayProxy.html', headers=await getheaders()) as response:
+            page = await response.text()
+            content = re.search(r'\"(/dayProxy/ip/\d+.html)\"', page).group(1)
             get_url = f'https://www.zdaye.com{content}'
 
         task = [
@@ -66,9 +66,10 @@ async def create_aiohttp():
             get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
             get_page('http://www.66ip.cn/areaindex_5/1.html', session=session),
             get_page('http://www.66ip.cn/areaindex_14/1.html', session=session),
-            get_page(get_url, session=session, mod=7),
             get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session),
+            get_page(get_url, session=session, mod=7),
         ]
+
         for i in range(2):
             task.append(get_page(f'http://www.nimadaili.com/http/{i + 1}/', mod=4, session=session))
             task.append(get_page(f'https://www.89ip.cn/index_{i + 1}.html', mod=3, session=session))
@@ -166,5 +167,6 @@ def ip_main():
     print('正在抓取代理ip。。。')
     asyncio.run(create_aiohttp())
     print("代理抓取完成!!!")
+
 
 # ip_main()

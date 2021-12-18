@@ -52,9 +52,9 @@ async def getheaders():
 async def create_aiohttp_ip():
     async with ClientSession(connector=TCPConnector(verify_ssl=False)) as session:  # 实例化一个请求对象
         # 获取站大爷分享ip地址
-        async with await session.get(url='https://www.zdaye.com/dayProxy.html') as response:
-            page_source = await response.text()
-            content = re.findall(r'<a\shref="(/dayProxy/ip/\d+.html)">', page_source)[0]
+        async with await session.get(url='https://www.zdaye.com/dayProxy.html', headers=await getheaders()) as response:
+            page_zdy = await response.text()
+            content = re.search(r'\"(/dayProxy/ip/\d+.html)\"', page_zdy).group(1)
             get_url = f'https://www.zdaye.com{content}'
 
         task = [
@@ -80,10 +80,11 @@ async def get_page(url, session, mod=0):
     header = await getheaders()
     timeout = ClientTimeout(total=30)  # 设置请求超时时间
     try:
-        async with await session.get(url=url, headers=header, timeout=timeout) as response:  # 异步请求
+        # 异步请求
+        async with await session.get(url=url, headers=header, timeout=timeout) as response:
             page_source = await response.text()  # 返回字符串形式的相应数据
-            await soup_page(page_source, mod=mod)
             # 请求 和 响应时要加上阻塞 await
+            await soup_page(page_source, mod=mod)
     except Exception as e:
         print(f"['{url}']抓取失败:", e)
 
