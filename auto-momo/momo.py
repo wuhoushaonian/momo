@@ -63,7 +63,7 @@ async def create_aiohttp_ip():
             task.append(get_page(f'http://http.taiyangruanjian.com/free/page{i + 1}/', mod=1, session=session))
             task.append(get_page(f'http://www.kxdaili.com/dailiip/1/{i + 1}.html', session=session))
             task.append(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session))
-            task.append(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session))
+            # task.append(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session))
             task.append(get_page(f'https://www.dieniao.com/FreeProxy/{i + 1}.html', mod=6, session=session))
         await asyncio.wait(task)
 
