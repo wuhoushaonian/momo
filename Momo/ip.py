@@ -46,7 +46,7 @@ def clear_file():
 # 写入文档
 async def record(text):
     with open(path, 'a', encoding='utf-8') as f:
-        f.write(text)
+        f.write(f'{text}\n')
 
 
 # 实例化请求对象
@@ -59,7 +59,7 @@ async def create_aiohttp():
             get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
             get_page('http://www.66ip.cn/areaindex_5/1.html', session=session),
             get_page('http://www.66ip.cn/areaindex_14/1.html', session=session),
-            get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
+            get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session),
         ]
         for i in range(2):
             task.append(get_page(f'http://www.nimadaili.com/http/{i + 1}/', mod=4, session=session))
@@ -68,6 +68,7 @@ async def create_aiohttp():
             task.append(get_page(f'http://www.kxdaili.com/dailiip/1/{i + 1}.html', session=session))
             task.append(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session))
             task.append(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session))
+            task.append(get_page(f'https://www.dieniao.com/FreeProxy/{i+1}.html', mod=6, session=session))
 
         await asyncio.wait(task)
 
@@ -79,8 +80,7 @@ async def get_page(url, session, mod=0):
     try:
         async with await session.get(url=url, headers=header, timeout=timeout) as response:  # 异步请求
             page_source = await response.text()  # 返回字符串形式的相应数据
-            await soup_page(page_source, mod=mod)
-            # 请求 和 响应时要加上阻塞 await
+            await soup_page(page_source, mod=mod)  # 请求 和 响应时要加上阻塞 await
     except Exception as e:
         print(f"['{url}']抓取失败:", e)
 
@@ -97,7 +97,7 @@ async def soup_page(source, mod):
             posts = re.search(r'<td>(\d{1,4})</td>', str(t))
             if not ips or not posts:
                 continue
-            await record(f"http://{ips.group()}:{posts.group(1)}\n")
+            await record(f"http://{ips.group()}:{posts.group(1)}")
     elif mod == 1:
         # 太阳
         soup = BeautifulSoup(source, 'lxml')
@@ -105,7 +105,7 @@ async def soup_page(source, mod):
         for li in lists:
             ips = re.findall(r'<div\sclass="td\std-4">(.*?)</div>', str(li))
             posts = re.findall(r'<div\sclass="td\std-2">(.*?)</div>', str(li))
-            await record(f'http://{ips[0]}:{posts[0]}\n')
+            await record(f'http://{ips[0]}:{posts[0]}')
     elif mod == 2:
         # 快代理
         soup = BeautifulSoup(source, 'lxml')
@@ -115,7 +115,7 @@ async def soup_page(source, mod):
             posts = re.findall(r'<td\s.*?="PORT">(.*?)</td>', str(t))
             if not ips or not posts:
                 continue
-            await record(f"http://{ips[0]}:{posts[0]}\n")
+            await record(f"http://{ips[0]}:{posts[0]}")
     elif mod == 3:
         # 89代理
         soup = BeautifulSoup(source, 'lxml')
@@ -124,25 +124,32 @@ async def soup_page(source, mod):
             t = td.select('td')
             ips = re.search(r'(\d+\.){3}\d+', str(t[0]))
             ports = re.search(r'\d{2,4}', str(t[1]))
-            await record(f"http://{ips.group()}:{ports.group()}\n")
+            await record(f"http://{ips.group()}:{ports.group()}")
     elif mod == 4:
         # 泥马代理
         soup = BeautifulSoup(source, 'lxml')
         tr = soup.find_all('tr')[1:]
         for i in tr:
             ip_post = re.findall(r'<td>(.*?)</td>', str(i))[0]
-            await record(f'http://{ip_post}\n')
+            await record(f'http://{ip_post}')
     elif mod == 5:
         ip_list = source.split('\r\n')[:-1]
         one = f'http://{ip_list[0]}\n'
         res = '\nhttp://'.join(ip_list)
-        await record(f'{one}{res}\n')
+        await record(f'{one}{res}')
+    elif mod == 6:
+        # 蝶鸟
+        ip_list = re.findall(r"<span\sclass='f-address'>(.*?)</span>", source)[1:]
+        port_list = re.findall(r"<span class='f-port'>(\d+)</span>", source)
+        for i in range(len(ip_list)):
+            await record(f'http://{ip_list[i]}:{port_list[i]}')
 
 
 def ip_main():
     clear_file()  # 清空存放代理文件
     print('正在抓取代理ip。。。')
     asyncio.run(create_aiohttp())
-    print("代理抓取成功！")
+    print("代理抓取完成!!!")
+
 
 # ip_main()

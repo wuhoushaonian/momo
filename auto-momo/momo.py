@@ -55,9 +55,6 @@ async def create_aiohttp_ip():
             get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session),
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
             get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
-            get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
-            get_page('http://www.66ip.cn/areaindex_5/1.html', session=session),
-            get_page('http://www.66ip.cn/areaindex_14/1.html', session=session),
             get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
         ]
         for i in range(2):
@@ -67,7 +64,7 @@ async def create_aiohttp_ip():
             task.append(get_page(f'http://www.kxdaili.com/dailiip/1/{i + 1}.html', session=session))
             task.append(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session))
             task.append(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session))
-
+            task.append(get_page(f'https://www.dieniao.com/FreeProxy/{i + 1}.html', mod=6, session=session))
         await asyncio.wait(task)
 
 
@@ -138,6 +135,12 @@ async def soup_page(source, mod):
         ip_list = source.split('\r\n')[:-1]
         for ip in ip_list:
             listIP.append(f'http://{ip}')
+    elif mod == 6:
+        # 蝶鸟
+        ip_list = re.findall(r"<span\sclass='f-address'>(.*?)</span>", source)[1:]
+        port_list = re.findall(r"<span class='f-port'>(\d+)</span>", source)
+        for i in range(len(ip_list)):
+            listIP.append(f'http://{ip_list[i]}:{port_list[i]}')
 
 
 def ip_main():
