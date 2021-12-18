@@ -184,7 +184,7 @@ async def page(page_source):
 def main():
     ip_main()  # 抓取代理
     proxies = [i.strip() for i in listIP]  # 生成代理列表
-    uvloop.install()
+    await uvloop.install()
     asyncio.run(create_aiohttp(link, proxies))  # 异步访问
     print(f"墨墨分享链接访问成功{n}次。")
 
