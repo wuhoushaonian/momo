@@ -3,7 +3,7 @@ import re
 from random import choice
 import asyncio
 # import aiohttp
-from aiohttp import ClientSession, ClientTimeout
+from aiohttp import ClientSession, ClientTimeout, TCPConnector
 from bs4 import BeautifulSoup
 import encodings.idna
 
@@ -51,7 +51,7 @@ async def record(text):
 
 # 实例化请求对象
 async def create_aiohttp():
-    async with ClientSession() as session:  # 实例化一个请求对象
+    async with ClientSession(connector=TCPConnector(verify_ssl=False)) as session:  # 实例化一个请求对象
         task = [
             get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session),
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
@@ -78,7 +78,7 @@ async def get_page(url, session, mod=0):
     header = await getheaders()
     timeout = ClientTimeout(total=30)  # 设置请求超时时间
     try:
-        async with await session.get(url=url, headers=header, timeout=timeout, verify=False) as response:  # 异步请求
+        async with await session.get(url=url, headers=header, timeout=timeout) as response:  # 异步请求
             page_source = await response.text()  # 返回字符串形式的相应数据
             await soup_page(page_source, mod=mod)  # 请求 和 响应时要加上阻塞 await
     except Exception as e:
