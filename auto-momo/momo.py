@@ -51,19 +51,19 @@ async def getheaders():
 # 实例化请求对象
 async def create_aiohttp_ip():
     async with ClientSession(connector=TCPConnector(verify_ssl=False)) as session:  # 实例化一个请求对象
-        try:
-            # 获取站大爷分享ip地址
-            async with await session.get(url='https://www.zdaye.com/dayProxy.html',
-                                         headers=await getheaders()) as response:
-                page_zdy = await response.text()
-                content = re.search(r'\"(/dayProxy/ip/\d+.html)\"', page_zdy).group(1)
-                get_url = f'https://www.zdaye.com{content}'
-        except Exception:
-            pass
+        # try:
+        #     # 获取站大爷分享ip地址
+        #     async with await session.get(url='https://www.zdaye.com/dayProxy.html',
+        #                                  headers=await getheaders()) as response:
+        #         page_zdy = await response.text()
+        #         content = re.search(r'\"(/dayProxy/ip/\d+.html)\"', page_zdy).group(1)
+        #         get_url = f'https://www.zdaye.com{content}'
+        # except Exception:
+        #     pass
 
         task = [
             get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session),
-            get_page(get_url, session=session, mod=7),
+            # get_page(get_url, session=session, mod=7),
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
             get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
             get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
