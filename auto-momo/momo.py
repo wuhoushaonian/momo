@@ -51,19 +51,8 @@ async def getheaders():
 # 实例化请求对象
 async def create_aiohttp_ip():
     async with ClientSession(connector=TCPConnector(verify_ssl=False)) as session:  # 实例化一个请求对象
-        # try:
-        #     # 获取站大爷分享ip地址
-        #     async with await session.get(url='https://www.zdaye.com/dayProxy.html',
-        #                                  headers=await getheaders()) as response:
-        #         page_zdy = await response.text()
-        #         content = re.search(r'\"(/dayProxy/ip/\d+.html)\"', page_zdy).group(1)
-        #         get_url = f'https://www.zdaye.com{content}'
-        # except Exception:
-        #     pass
-
         task = [
             get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session),
-            # get_page(get_url, session=session, mod=7),
             get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
             get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
             get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)
@@ -76,6 +65,17 @@ async def create_aiohttp_ip():
             task.append(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session))
             # task.append(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session))
             task.append(get_page(f'https://www.dieniao.com/FreeProxy/{i + 1}.html', mod=6, session=session))
+
+        try:
+            # 获取站大爷分享ip地址
+            async with await session.get(url='https://www.zdaye.com/dayProxy.html',
+                                         headers=await getheaders()) as response:
+                page_zdy = await response.text()
+                content = re.search(r'\"(/dayProxy/ip/\d+.html)\"', page_zdy).group(1)
+                get_url = f'https://www.zdaye.com{content}'
+            task.append(get_page(get_url, mod=7, session=session))
+        except Exception:
+            pass
         await asyncio.wait(task)
 
 
