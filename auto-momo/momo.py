@@ -178,7 +178,7 @@ def ip_main():
 async def create_aiohttp(url, proxy_list):
     global n
     n = 0
-    async with ClientSession(connector=TCPConnector(verify_ssl=False, limit=3)) as session:
+    async with ClientSession() as session:
         # 生成任务列表
         task = [asyncio.create_task(web_request(url=url, proxy=proxy, session=session)) for
                 proxy in proxy_list]
