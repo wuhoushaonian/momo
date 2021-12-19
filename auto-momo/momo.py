@@ -45,7 +45,7 @@ async def getheaders():
 
 # 实例化请求对象
 async def create_aiohttp_ip():
-    async with ClientSession(connector=TCPConnector(ssl=False, limit=3)) as session:
+    async with ClientSession(connector=TCPConnector(ssl=False, limit=2)) as session:
         task = [
             asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session)),
             asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session)),
