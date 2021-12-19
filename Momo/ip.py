@@ -3,7 +3,7 @@ import re
 from random import choice
 import asyncio
 # import aiohttp
-from aiohttp import ClientSession, ClientTimeout, TCPConnector
+from aiohttp import ClientSession, ClientTimeout
 from bs4 import BeautifulSoup
 import encodings.idna
 
@@ -51,7 +51,33 @@ async def record(text):
 
 # 实例化请求对象
 async def create_aiohttp():
-    async with ClientSession(connector=TCPConnector(verify_ssl=False)) as session:  # 实例化一个请求对象
+    # 实例化对象
+    async with ClientSession() as session:
+        task = [
+            asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session)),
+            asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session)),
+            asyncio.create_task(get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session)),
+            asyncio.create_task(get_page('http://www.66ip.cn/areaindex_1/1.html', session=session)),
+            asyncio.create_task(get_page('http://www.66ip.cn/areaindex_5/1.html', session=session)),
+            asyncio.create_task(get_page('http://www.66ip.cn/areaindex_14/1.html', session=session)),
+            asyncio.create_task(
+                get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)),
+        ]
+
+        for i in range(2):
+            task.append(
+                asyncio.create_task(get_page(f'http://www.nimadaili.com/http/{i + 1}/', mod=4, session=session)))
+            task.append(
+                asyncio.create_task(get_page(f'https://www.89ip.cn/index_{i + 1}.html', mod=3, session=session)))
+            task.append(asyncio.create_task(
+                get_page(f'http://http.taiyangruanjian.com/free/page{i + 1}/', mod=1, session=session)))
+            task.append(
+                asyncio.create_task(get_page(f'http://www.kxdaili.com/dailiip/1/{i + 1}.html', session=session)))
+            task.append(
+                asyncio.create_task(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session)))
+            task.append(asyncio.create_task(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session)))
+            task.append(asyncio.create_task(
+                get_page(f'https://www.dieniao.com/FreeProxy/{i + 1}.html', mod=6, session=session)))
         # try:
         #     # 获取站大爷分享ip地址
         #     async with await session.get(url='https://www.zdaye.com/dayProxy.html',
@@ -59,40 +85,21 @@ async def create_aiohttp():
         #         page_zdy = await response.text()
         #         content = re.search(r'\"(/dayProxy/ip/\d+.html)\"', page_zdy).group(1)
         #         get_url = f'https://www.zdaye.com{content}'
-        # # except Exception:
+        #     task.append(get_page(get_url, mod=7, session=session))
+        # except Exception:
         #     pass
-
-        task = [
-            get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session),
-            get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session),
-            get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session),
-            get_page('http://www.66ip.cn/areaindex_1/1.html', session=session),
-            get_page('http://www.66ip.cn/areaindex_5/1.html', session=session),
-            get_page('http://www.66ip.cn/areaindex_14/1.html', session=session),
-            get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session),
-            # get_page(get_url, session=session, mod=7),
-        ]
-
-        for i in range(2):
-            task.append(get_page(f'http://www.nimadaili.com/http/{i + 1}/', mod=4, session=session))
-            task.append(get_page(f'https://www.89ip.cn/index_{i + 1}.html', mod=3, session=session))
-            task.append(get_page(f'http://http.taiyangruanjian.com/free/page{i + 1}/', mod=1, session=session))
-            task.append(get_page(f'http://www.kxdaili.com/dailiip/1/{i + 1}.html', session=session))
-            task.append(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session))
-            task.append(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session))
-            task.append(get_page(f'https://www.dieniao.com/FreeProxy/{i + 1}.html', mod=6, session=session))
 
         await asyncio.wait(task)
 
 
 # 访问网页
 async def get_page(url, session, mod=0):
-    header = await getheaders()
-    timeout = ClientTimeout(total=30)  # 设置请求超时时间
+    hd = await getheaders()  # 请求头
+    tout = ClientTimeout(total=30)  # 超时时间
     try:
-        async with await session.get(url=url, headers=header, timeout=timeout) as response:  # 异步请求
+        async with await session.get(url=url, headers=hd, timeout=tout) as response:
             page_source = await response.text()  # 返回字符串形式的相应数据
-            await soup_page(page_source, mod=mod)  # 请求 和 响应时要加上阻塞 await
+            await soup_page(page_source, mod=mod)
     except Exception as e:
         print(f"['{url}']抓取失败:", e)
 
@@ -171,5 +178,4 @@ def ip_main():
     asyncio.run(create_aiohttp())
     print("代理抓取完成!!!")
 
-
-ip_main()
+# ip_main()
