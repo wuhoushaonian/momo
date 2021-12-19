@@ -4,7 +4,6 @@ from os import environ
 from random import choice
 import asyncio
 from aiohttp import ClientSession, ClientTimeout, TCPConnector
-import uvloop
 from bs4 import BeautifulSoup
 
 global n  # 记录访问成功次数
@@ -173,7 +172,6 @@ async def soup_page(source, mod):
 
 
 def ip_main():
-    uvloop.install()
     asyncio.run(create_aiohttp_ip())
     print(f"代理ip抓取完成,共{len(listIP)}个可用代理ip地址。")
 
@@ -211,7 +209,6 @@ async def page(page_source):
 def main():
     ip_main()  # 抓取代理
     proxies = [i.strip() for i in listIP]  # 生成代理列表
-    # uvloop.install()
     asyncio.run(create_aiohttp(link, proxies))
     print(f"墨墨分享链接访问成功{n}次。")
 
