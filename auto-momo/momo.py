@@ -47,7 +47,7 @@ async def getheaders():
 
 # 实例化请求对象
 async def create_aiohttp_ip():
-    async with ClientSession(connector=TCPConnector(ssl=False, limit=2)) as session:
+    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
         task = [
             asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session)),
             asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session)),
@@ -211,7 +211,7 @@ async def page(page_source):
 def main():
     ip_main()  # 抓取代理
     proxies = [i.strip() for i in listIP]  # 生成代理列表
-    # uvloop.install()
+    uvloop.install()
     asyncio.run(create_aiohttp(link, proxies))
     print(f"墨墨分享链接访问成功{n}次。")
 
