@@ -3,17 +3,13 @@ import re
 from os import environ
 from random import choice
 import asyncio
-# import aiohttp
 from aiohttp import ClientSession, ClientTimeout, TCPConnector
 import uvloop
 from bs4 import BeautifulSoup
 
 global n  # 记录访问成功次数
 listIP = []  # 保存IP地址
-
 link = 'link'  # 设置link
-
-# asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 # 如果检测到程序在 github actions 内运行，那么读取环境变量中的登录信息
@@ -50,7 +46,7 @@ async def getheaders():
 
 # 实例化请求对象
 async def create_aiohttp_ip():
-    async with ClientSession(connector=TCPConnector(ssl=False, limit=2)) as session:
+    async with ClientSession(connector=TCPConnector(ssl=False, limit=1)) as session:
         task = [
             asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session)),
             asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session)),
