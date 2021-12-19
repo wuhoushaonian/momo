@@ -46,16 +46,16 @@ async def getheaders():
 
 # 实例化请求对象
 async def create_aiohttp_ip():
-    async with ClientSession(connector=TCPConnector(ssl=False, limit=1)) as session:
+    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
         task = [
             asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session)),
             asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session)),
             asyncio.create_task(get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session)),
             asyncio.create_task(
                 get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=5, session=session)),
-            asyncio.create_task(get_page('http://www.66ip.cn/areaindex_1/1.html', session=session)),
-            asyncio.create_task(get_page('http://www.66ip.cn/areaindex_5/1.html', session=session)),
-            asyncio.create_task(get_page('http://www.66ip.cn/areaindex_14/1.html', session=session)),
+            # asyncio.create_task(get_page('http://www.66ip.cn/areaindex_1/1.html', session=session)),
+            # asyncio.create_task(get_page('http://www.66ip.cn/areaindex_5/1.html', session=session)),
+            # asyncio.create_task(get_page('http://www.66ip.cn/areaindex_14/1.html', session=session)),
         ]
         for i in range(2):
             task.append(
@@ -73,7 +73,7 @@ async def create_aiohttp_ip():
             task.append(
                 asyncio.create_task(get_page(f'http://www.ip3366.net/free/?stype=1&page={i + 1}', session=session)))
 
-            task.append(asyncio.create_task(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session)))
+            # task.append(asyncio.create_task(get_page(f'http://www.66ip.cn/areaindex_1{i + 1}/1.html', session=session)))
 
             task.append(asyncio.create_task(
                 get_page(f'https://www.dieniao.com/FreeProxy/{i + 1}.html', mod=6, session=session)))
