@@ -63,15 +63,19 @@ async def create_aiohttp():
         ]
 
         for i in range(1, 4):
-            task.append(asyncio.create_task(get_page(f'http://www.nimadaili.com/http/{i}/', mod=4, session=session)))
-            task.append(asyncio.create_task(get_page(f'https://www.89ip.cn/index_{i}.html', session=session)))
             task.append(
-                asyncio.create_task(get_page(f'http://http.taiyangruanjian.com/free/page{i}/', mod=1, session=session)))
-            task.append(asyncio.create_task(get_page(f'http://www.kxdaili.com/dailiip/1/{i}.html', session=session)))
-            task.append(asyncio.create_task(get_page(f'http://www.ip3366.net/free/?stype=1&page={i}', session=session)))
+                asyncio.create_task(get_page(f'http://www.nimadaili.com/http/{i}/', mod=4, session=session)))
+            task.append(
+                asyncio.create_task(get_page(f'https://www.89ip.cn/index_{i}.html', session=session)))
+            task.append(asyncio.create_task(
+                get_page(f'http://http.taiyangruanjian.com/free/page{i}/', mod=1, session=session)))
+            task.append(
+                asyncio.create_task(get_page(f'http://www.kxdaili.com/dailiip/1/{i}.html', session=session)))
+            task.append(
+                asyncio.create_task(get_page(f'http://www.ip3366.net/free/?stype=1&page={i}', session=session)))
             task.append(asyncio.create_task(get_page(f'http://www.66ip.cn/areaindex_1{i}/1.html', session=session)))
-            task.append(
-                asyncio.create_task(get_page(f'https://www.dieniao.com/FreeProxy/{i}.html', mod=5, session=session)))
+            task.append(asyncio.create_task(
+                get_page(f'https://www.dieniao.com/FreeProxy/{i}.html', mod=5, session=session)))
         await asyncio.wait(task)
 
 

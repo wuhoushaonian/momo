@@ -27,7 +27,8 @@ async def web_request(url, proxy, session):
     # 并发限制
     async with asyncio.Semaphore(20):
         try:
-            async with await session.get(url=url, headers=await getheaders(), proxy=proxy) as response:
+            async with await session.get(url=url, headers=await getheaders(), proxy=proxy,
+                                         timeout=10) as response:
                 # 返回字符串形式的相应数据
                 page_source = await response.text()
                 await page(page_source)
