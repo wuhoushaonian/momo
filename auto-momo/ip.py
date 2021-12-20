@@ -41,9 +41,6 @@ async def create_aiohttp_ip():
             asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session)),
             asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session)),
             asyncio.create_task(get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session)),
-            asyncio.create_task(get_page('http://www.66ip.cn/areaindex_1/1.html', session=session)),
-            asyncio.create_task(get_page('http://www.66ip.cn/areaindex_5/1.html', session=session)),
-            asyncio.create_task(get_page('http://www.66ip.cn/areaindex_14/1.html', session=session)),
             asyncio.create_task(
                 get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=3, session=session)),
         ]
@@ -59,7 +56,6 @@ async def create_aiohttp_ip():
                 asyncio.create_task(get_page(f'http://www.kxdaili.com/dailiip/1/{i}.html', session=session)))
             task.append(
                 asyncio.create_task(get_page(f'http://www.ip3366.net/free/?stype=1&page={i}', session=session)))
-            task.append(asyncio.create_task(get_page(f'http://www.66ip.cn/areaindex_1{i}/1.html', session=session)))
             task.append(asyncio.create_task(
                 get_page(f'https://www.dieniao.com/FreeProxy/{i}.html', mod=5, session=session)))
 
