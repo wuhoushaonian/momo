@@ -25,7 +25,7 @@ async def create_aiohttp(url, proxy_list):
 # 网页访问
 async def web_request(url, proxy, session):
     # 并发限制
-    async with asyncio.Semaphore(50):
+    async with asyncio.Semaphore(10):
         try:
             async with await session.get(url=url, headers=await getheaders(), proxy=proxy) as response:
                 # 返回字符串形式的相应数据
