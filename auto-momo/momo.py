@@ -6,8 +6,8 @@ import asyncio
 from aiohttp import ClientSession, TCPConnector, ClientTimeout
 
 global n  # 记录访问成功次数
-# link = 'link'  # 设置link
-link = 'https://www.maimemo.com/share/page?uid=10229269&pid=8526dc258723264ef27890d668d2e391&tid=e33559031ac6fbe7eb4942c618b67c8b'
+link = 'link'  # 设置link
+# link = 'https://www.maimemo.com/share/page?uid=10229269&pid=8526dc258723264ef27890d668d2e391&tid=e33559031ac6fbe7eb4942c618b67c8b'
 
 # 如果检测到程序在 github actions 内运行，那么读取环境变量中的登录信息
 if environ.get('GITHUB_RUN_ID', None):
