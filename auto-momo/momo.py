@@ -1,11 +1,13 @@
 # encoding:utf-8
+import time
 from os import environ
 from ip import listIP, getheaders, ip_main
 import asyncio
-from aiohttp import ClientSession, TCPConnector
+from aiohttp import ClientSession, TCPConnector, ClientTimeout
 
 global n  # 记录访问成功次数
-link = 'link'  # 设置link
+# link = 'link'  # 设置link
+link = 'https://www.maimemo.com/share/page?uid=10229269&pid=8526dc258723264ef27890d668d2e391&tid=e33559031ac6fbe7eb4942c618b67c8b'
 
 # 如果检测到程序在 github actions 内运行，那么读取环境变量中的登录信息
 if environ.get('GITHUB_RUN_ID', None):
@@ -24,14 +26,17 @@ async def create_aiohttp(url, proxy_list):
 
 # 网页访问
 async def web_request(url, proxy, session):
+    tout = ClientTimeout(total=30)
     # 并发限制
-    async with asyncio.Semaphore(20):
+    async with asyncio.Semaphore(3):
         try:
-            async with await session.get(url=url, headers=await getheaders(), proxy=proxy) as response:
+            async with await session.get(url=url, headers=await getheaders(), proxy=proxy,
+                                         timeout=tout) as response:
                 # 返回字符串形式的相应数据
                 page_source = await response.text()
                 await page(page_source)
         except Exception:
+            # print('访问失败!')
             pass
 
 
@@ -40,6 +45,7 @@ async def page(page_source):
     global n
     if "学习天数" in page_source:
         n += 1
+        # print("成功！")
 
 
 def main():
@@ -50,4 +56,6 @@ def main():
 
 
 if __name__ == '__main__':
+    # start = time.time()
     main()
+    # print(time.time() - start)
