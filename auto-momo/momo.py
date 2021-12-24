@@ -2,7 +2,7 @@
 from os import environ
 from ip import listIP, getheaders, ip_main
 import asyncio
-from aiohttp import ClientSession, TCPConnector
+from aiohttp import ClientSession, TCPConnector, ClientTimeout
 
 global n  # 记录访问成功次数
 link = 'link'  # 设置link
@@ -24,10 +24,12 @@ async def create_aiohttp(url, proxy_list):
 
 # 网页访问
 async def web_request(url, proxy, session):
+    tout = ClientTimeout(total=30)
     # 并发限制
-    async with asyncio.Semaphore(50):
+    async with asyncio.Semaphore(3):
         try:
-            async with await session.get(url=url, headers=await getheaders(), proxy=proxy) as response:
+            async with await session.get(url=url, headers=await getheaders(), proxy=proxy,
+                                         timeout=tout) as response:
                 # 返回字符串形式的相应数据
                 page_source = await response.text()
                 await page(page_source)
