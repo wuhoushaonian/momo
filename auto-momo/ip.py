@@ -34,31 +34,29 @@ async def getheaders():
     return headers
 
 
+# 生成任务列表
+async def taskList(ss):
+    task = [
+        asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=ss)),
+        asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=ss)),
+        asyncio.create_task(get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=ss)),
+        asyncio.create_task(get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=3, session=ss)),
+    ]
+
+    for i in range(1, 4):
+        task.append(asyncio.create_task(get_page(f'http://www.nimadaili.com/http/{i}/', mod=4, session=ss)))
+        task.append(asyncio.create_task(get_page(f'https://www.89ip.cn/index_{i}.html', session=ss)))
+        task.append(asyncio.create_task(get_page(f'http://http.taiyangruanjian.com/free/page{i}/', mod=1, session=ss)))
+        task.append(asyncio.create_task(get_page(f'http://www.kxdaili.com/dailiip/1/{i}.html', session=ss)))
+        task.append(asyncio.create_task(get_page(f'http://www.ip3366.net/free/?stype=1&page={i}', session=ss)))
+        task.append(asyncio.create_task(get_page(f'https://www.dieniao.com/FreeProxy/{i}.html', mod=5, session=ss)))
+    return task
+
+
 # 实例化请求对象
 async def create_aiohttp_ip():
     async with ClientSession(connector=TCPConnector(ssl=False)) as session:
-        task = [
-            asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session)),
-            asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session)),
-            asyncio.create_task(get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session)),
-            asyncio.create_task(
-                get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=3, session=session)),
-        ]
-
-        for i in range(1, 4):
-            task.append(
-                asyncio.create_task(get_page(f'http://www.nimadaili.com/http/{i}/', mod=4, session=session)))
-            task.append(
-                asyncio.create_task(get_page(f'https://www.89ip.cn/index_{i}.html', session=session)))
-            task.append(asyncio.create_task(
-                get_page(f'http://http.taiyangruanjian.com/free/page{i}/', mod=1, session=session)))
-            task.append(
-                asyncio.create_task(get_page(f'http://www.kxdaili.com/dailiip/1/{i}.html', session=session)))
-            task.append(
-                asyncio.create_task(get_page(f'http://www.ip3366.net/free/?stype=1&page={i}', session=session)))
-            task.append(asyncio.create_task(
-                get_page(f'https://www.dieniao.com/FreeProxy/{i}.html', mod=5, session=session)))
-
+        task = await taskList(session)
         await asyncio.wait(task)
 
 
