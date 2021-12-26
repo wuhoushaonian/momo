@@ -55,7 +55,7 @@ async def taskList(ss):
 
 # 实例化请求对象
 async def create_aiohttp_ip():
-    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
+    async with ClientSession(connector=TCPConnector(ssl=False, limit_per_host=1)) as session:
         task = await taskList(session)
         await asyncio.wait(task)
 
@@ -65,10 +65,9 @@ async def get_page(url, session, mod=0):
     tout = ClientTimeout(total=20)
     hd = await getheaders()
     try:
-        async with asyncio.Semaphore(1):
-            async with await session.get(url=url, headers=hd, timeout=tout) as response:
-                page_source = await response.text()
-                await soup_page(page_source, mod=mod)
+        async with await session.get(url=url, headers=hd, timeout=tout) as response:
+            page_source = await response.text()
+            await soup_page(page_source, mod=mod)
     except Exception as e:
         print(f"['{url}']抓取失败:", e)
 
