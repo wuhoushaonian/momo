@@ -43,7 +43,7 @@ async def taskList(ss):
         asyncio.create_task(get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=3, session=ss)),
     ]
 
-    for i in range(1, 4):
+    for i in range(1, 3):
         task.append(asyncio.create_task(get_page(f'http://www.nimadaili.com/http/{i}/', mod=4, session=ss)))
         task.append(asyncio.create_task(get_page(f'https://www.89ip.cn/index_{i}.html', session=ss)))
         task.append(asyncio.create_task(get_page(f'http://http.taiyangruanjian.com/free/page{i}/', mod=1, session=ss)))
