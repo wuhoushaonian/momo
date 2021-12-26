@@ -42,7 +42,7 @@ jobs:
         run: |
           git config --global user.email iicovo@163.com
           git config --global user.name Gonfei
-          git add "time.log"
+          git add .
           git commit -m "Auto update" -a
       - name: Push changes
         uses: ad-m/github-push-action@master    
