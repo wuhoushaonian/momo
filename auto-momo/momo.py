@@ -24,12 +24,11 @@ async def create_aiohttp(url, proxy_list):
 
 # 网页访问
 async def web_request(url, proxy, session):
-    tout = ClientTimeout(total=20)
     # 并发限制
     async with asyncio.Semaphore(3):
         try:
             async with await session.get(url=url, headers=await getheaders(), proxy=proxy,
-                                         timeout=tout) as response:
+                                         timeout=ClientTimeout(total=20)) as response:
                 # 返回字符串形式的相应数据
                 page_source = await response.text()
                 await page(page_source)
@@ -46,8 +45,7 @@ async def page(page_source):
 
 def main():
     ip_main()  # 抓取代理
-    proxies = [i.strip() for i in listIP]  # 生成代理列表
-    asyncio.run(create_aiohttp(link, proxies))
+    asyncio.run(create_aiohttp(link, listIP))
     print(f"墨墨分享链接访问成功{n}次。")
 
 

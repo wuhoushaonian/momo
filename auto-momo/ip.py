@@ -43,7 +43,7 @@ async def taskList(ss):
         asyncio.create_task(get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=3, session=ss)),
     ]
 
-    for i in range(1, 3):
+    for i in range(1, 4):
         task.append(asyncio.create_task(get_page(f'http://www.nimadaili.com/http/{i}/', mod=4, session=ss)))
         task.append(asyncio.create_task(get_page(f'https://www.89ip.cn/index_{i}.html', session=ss)))
         task.append(asyncio.create_task(get_page(f'http://http.taiyangruanjian.com/free/page{i}/', mod=1, session=ss)))
@@ -55,7 +55,7 @@ async def taskList(ss):
 
 # 实例化请求对象
 async def create_aiohttp_ip():
-    async with ClientSession(connector=TCPConnector(ssl=False, limit=10)) as session:
+    async with ClientSession(connector=TCPConnector(ssl=False, limit=5)) as session:
         task = await taskList(session)
         await asyncio.wait(task)
 
@@ -122,5 +122,5 @@ async def soup_page(source, mod):
 def ip_main():
     asyncio.run(create_aiohttp_ip())
     global listIP
-    listIP = list(set(listIP))
+    listIP = list(set(listIP))  # 代理去重
     print(f"代理ip抓取完成,共{len(listIP)}个可用代理ip地址。")
