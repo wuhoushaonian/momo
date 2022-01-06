@@ -1,4 +1,4 @@
-name: momo
+name: Auto momo
 
 # Controls when the action will run.
 on:
@@ -38,12 +38,3 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pytz requests datetime
           python ./auto-momo/momo.py
-          echo `date +"%Y-%m-%d %H:%M:%S"` begin > time.log
-      - name: Commit #上传新的time.log到仓库
-        run: |
-          git config --global user.email iicovo@163.com
-          git config --global user.name Gonfei
-          git add time.log
-          git commit -m "Auto update" -a
-      - name: Push changes
-        uses: ad-m/github-push-action@master    
