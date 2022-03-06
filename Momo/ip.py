@@ -53,6 +53,7 @@ async def create_aiohttp():
     async with ClientSession() as session:
         task = [
             asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=session)),
+            get_page('https://proxy.seofangfa.com/', session=session),
             asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=session)),
             asyncio.create_task(get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=session)),
             asyncio.create_task(get_page('http://www.66ip.cn/areaindex_1/1.html', session=session)),

@@ -38,6 +38,7 @@ async def getheaders():
 async def taskList(ss):
     task = [
         asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=ss)),
+        get_page('https://proxy.seofangfa.com/', session=ss),
         asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=ss)),
         asyncio.create_task(get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=ss)),
         asyncio.create_task(get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=3, session=ss)),
@@ -117,6 +118,11 @@ async def soup_page(source, mod):
     elif mod == 6:
         # 站大爷
         pass
+    elif mod == 7:
+        ips = re.findall(r'<td>.*?(\d+\.\d+\.\d+\.\d+)</td>', source)
+        posts = re.findall(r'<td>(\d{1,5})</td>', source)
+        for i in range(len(ips)):
+            listIP.append(f'http://{ips[i]}:{posts[i]}')
 
 
 def ip_main():
