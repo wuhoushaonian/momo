@@ -40,6 +40,10 @@ async def taskList(ss):
         asyncio.create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=ss)),
         get_page('https://proxy.seofangfa.com/', session=ss),
         asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=ss)),
+        asyncio.create_task(
+            get_page('https://cdn.jsdelivr.net/gh/parserpp/ip_ports/proxyinfo.txt', mod=00, session=ss)),
+        asyncio.create_task(
+            get_page('https://fastly.jsdelivr.net/gh/parserpp/ip_ports@main/proxyinfo.txt', mod=00, session=ss)),
         asyncio.create_task(get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=ss)),
         asyncio.create_task(get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=3, session=ss)),
     ]
@@ -81,6 +85,11 @@ async def soup_page(source, mod):
         posts = re.findall(r'<td>[\s]*?(\d{1,5})[\s]*?</td>', source)
         for i in range(len(ips)):
             listIP.append(f"http://{ips[i]}:{posts[i]}")
+
+    elif mod == 00:
+        res = source.split('\n')
+        for i in range(len(res) - 1):
+            listIP.append(f'http://{res[i]}')
 
     elif mod == 1:
         # 太阳
