@@ -41,9 +41,9 @@ async def taskList(ss):
         get_page('https://proxy.seofangfa.com/', session=ss),
         asyncio.create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=ss)),
         asyncio.create_task(
-            get_page('https://cdn.jsdelivr.net/gh/parserpp/ip_ports/proxyinfo.txt', mod=00, session=ss)),
+            get_page('https://cdn.jsdelivr.net/gh/parserpp/ip_ports/proxyinfo.txt', mod=-1, session=ss)),
         asyncio.create_task(
-            get_page('https://fastly.jsdelivr.net/gh/parserpp/ip_ports@main/proxyinfo.txt', mod=00, session=ss)),
+            get_page('https://fastly.jsdelivr.net/gh/parserpp/ip_ports@main/proxyinfo.txt', mod=-1, session=ss)),
         asyncio.create_task(get_page('https://www.kuaidaili.com/free/intr/2/', mod=2, session=ss)),
         asyncio.create_task(get_page('https://www.proxy-list.download/api/v1/get?type=http', mod=3, session=ss)),
     ]
@@ -60,7 +60,7 @@ async def taskList(ss):
 
 # 实例化请求对象
 async def create_aiohttp_ip():
-    async with ClientSession(connector=TCPConnector(ssl=False, limit=5)) as session:
+    async with ClientSession() as session:
         task = await taskList(session)
         await asyncio.wait(task)
 
@@ -70,7 +70,7 @@ async def get_page(url, session, mod=0):
     tout = ClientTimeout(total=20)
     hd = await getheaders()
     try:
-        async with asyncio.Semaphore(2):
+        async with asyncio.Semaphore(3):
             async with await session.get(url=url, headers=hd, timeout=tout) as response:
                 page_source = await response.text()
                 await soup_page(page_source, mod=mod)
@@ -86,7 +86,7 @@ async def soup_page(source, mod):
         for i in range(len(ips)):
             listIP.append(f"http://{ips[i]}:{posts[i]}")
 
-    elif mod == 00:
+    elif mod == -1:
         res = source.split('\n')
         for i in range(len(res) - 1):
             listIP.append(f'http://{res[i]}')
