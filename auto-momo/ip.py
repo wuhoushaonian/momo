@@ -1,7 +1,7 @@
 # encoding:utf-8
 from asyncio import create_task, wait, Semaphore, run
 from random import choice
-from aiohttp import ClientSession, ClientTimeout
+from aiohttp import ClientSession, ClientTimeout, TCPConnector
 from re import findall
 
 listIP = []  # 保存IP地址
@@ -59,7 +59,7 @@ async def taskList(ss):
 
 # 实例化请求对象
 async def create_aiohttp_ip():
-    async with ClientSession() as session:
+    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
         task = await taskList(session)
         await wait(task)
 
