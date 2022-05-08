@@ -30,7 +30,7 @@ jobs:
       - name: Commit #上传新的time.log到仓库
         run: |
           git config --global user.email iicovo@163.com
-          git config --global user.name Gonfei
+          git config --global user.name Gonfeii
           git add time.log
           git commit -m "Auto Update" -a
           
