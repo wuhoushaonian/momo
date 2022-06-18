@@ -3,7 +3,7 @@ name: Update momo
 # Controls when the action will run.
 on:
   schedule:
-    - cron: '20 14 * * 2,4'
+    - cron: '20 22 * * 5'
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
