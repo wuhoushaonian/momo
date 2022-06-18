@@ -2,7 +2,7 @@
 from asyncio import create_task, wait, Semaphore, run
 from random import choice
 from aiohttp import ClientSession, ClientTimeout, TCPConnector
-from re import findall
+from re import findall, search
 
 listIP = []  # 保存IP地址
 
@@ -39,7 +39,11 @@ async def taskList(ss):
     task = [
         create_task(get_page('http://www.kxdaili.com/dailiip/2/1.html', session=ss)),
         create_task(get_page('https://proxy.seofangfa.com/', session=ss)),
+        create_task(get_page('http://www.66ip.cn/areaindex_33/1.html', session=ss)),
         create_task(get_page('https://www.kuaidaili.com/free/inha/1/', mod=2, session=ss)),
+        create_task(
+            get_page('https://www.89ip.cn/tqdl.html?num=1000&address=&kill_address=&port=&kill_port=&isp=', mod=8,
+                     session=ss)),
         create_task(get_page('https://cdn.jsdelivr.net/gh/parserpp/ip_ports/proxyinfo.txt', mod=-1, session=ss)),
         create_task(
             get_page('https://fastly.jsdelivr.net/gh/parserpp/ip_ports@main/proxyinfo.txt', mod=-1, session=ss)),
@@ -131,6 +135,11 @@ async def soup_page(source, mod):
         posts = findall(r'<td>(\d{1,5})</td>', source)
         for i in range(len(ips)):
             listIP.append(f'http://{ips[i]}:{posts[i]}')
+    elif mod == 8:
+        temp = search(r'<div\sstyle=\"padding-left:20px;\">[\s]?(.*?)[\s]?</div>', source)
+        pList = temp.group(1).strip().split('<br>')[:-2]
+        for p in pList:
+            print(f"http://{p}")
 
 
 def ip_main():
