@@ -18,7 +18,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
-        uses: actions/checkout@master
+        run: |
+          git clone https://github.com/wuhoushaonian/momo.git ~/momo
 
       # Set-timezone
       - name: Set time zone
@@ -31,12 +32,16 @@ jobs:
            python-version: 3.7
            
       - name: 'Install requirements'
-        run: pip install -r ./auto-momo/requirements.txt
+        run: |
+          cd ~/momo
+          git checkout master
+          pip install -r ./auto-momo/requirements.txt
         
       - name: 'Working'
         env:
           link: ${{secrets.link}} 
         run: |
+          cd ~/momo
           python -m pip install --upgrade pip
           python -m pip install pytz requests datetime
           python ./auto-momo/momo.py  
